@@ -17,33 +17,37 @@ export const AboutModal: React.FC<AboutModalProps> = ({ onClose }) => {
                 </button>
                 
                 <div className="flex flex-col items-center text-center mb-8">
-                    <h2 className="font-cinzel-dec font-bold text-2xl md:text-3xl text-[#FAF5F0] mb-2 uppercase tracking-wider">
-                        ATLAS XXIII • COMIC STUDIO
+                    <h2 className="font-cinzel-dec font-bold text-2xl md:text-3xl text-[#FAF5F0] mb-2 uppercase tracking-wider font-mono">
+                        ATLAS XXIII · COMIC STUDIO
                     </h2>
-                    <div className="bg-[#2A0E20] text-[#DF9E65] border border-[#3D1629] px-3 py-1 rounded-full font-mono text-xs tracking-widest uppercase">
+                    <div className="bg-[#2A0E20] text-[#DF9E65] border border-[#3D1629] px-3.5 py-1 rounded-full font-mono text-xs tracking-widest uppercase font-bold">
                         {APP_VERSION}
                     </div>
                 </div>
 
                 <div className="space-y-6 text-sm">
                     <div className="bg-[#1B0A16] p-5 rounded-2xl border border-[#3D1629]">
-                        <h3 className="font-bold uppercase text-[#DF9E65] text-xs tracking-wider mb-2">Studio Architecture</h3>
+                        <h3 className="font-bold uppercase text-[#DF9E65] text-xs tracking-wider mb-2 font-mono">
+                            Studio Architecture
+                        </h3>
                         <p className="text-[#EADDE2] text-xs leading-relaxed">
-                            Ultra-luxury editorial comic creation suite powered by Gemini 3 Pro, Nano Banana 2.1, and Veo video animation pipelines.
+                            Ultra-luxury editorial comic book authoring and illustration suite powered by Gemini 3.8 Flash, Flagship Nano Banana 2.1, and 4K page layout synthesis.
                         </p>
                     </div>
 
                     <div className="bg-[#1B0A16] p-5 rounded-2xl border border-[#3D1629]">
-                        <h3 className="font-bold uppercase text-[#C68B59] text-xs tracking-wider mb-3">Core Capabilities</h3>
+                        <h3 className="font-bold uppercase text-[#C68B59] text-xs tracking-wider mb-3 font-mono">
+                            Core Capabilities
+                        </h3>
                         <ul className="grid grid-cols-2 gap-2 text-xs font-medium text-[#8A6D7B] list-disc list-inside">
-                            <li>Studio Editor & Panel Layouts</li>
+                            <li>Multi-Panel Layouts & Story Director</li>
                             <li>Character Consistency Lab</li>
                             <li>Prompt Lab & Payload Viewer</li>
-                            <li>Veo Motion Director</li>
-                            <li>Image Refiner & Inpainting</li>
+                            <li>Image Refiner & Inpainting Studio</li>
                             <li>Prop & Location Armory</li>
                             <li>CBS Archive Save / Restore</li>
-                            <li>PDF & ZIP Multi-Export</li>
+                            <li>PDF & ZIP High-Res Export</li>
+                            <li>Diagnostic Error Telemetry</li>
                         </ul>
                     </div>
                 </div>
@@ -51,7 +55,7 @@ export const AboutModal: React.FC<AboutModalProps> = ({ onClose }) => {
                 <div className="mt-8 text-center">
                     <button 
                         onClick={onClose} 
-                        className="bg-gradient-to-r from-[#B97743] via-[#C98A55] to-[#DF9D64] text-[#12060C] font-bold text-xs px-8 py-3 rounded-full uppercase tracking-widest shadow-[0_0_20px_rgba(198,139,89,0.3)] hover:brightness-110 active:scale-95 transition-all font-sans"
+                        className="bg-gradient-to-r from-[#B97743] via-[#C98A55] to-[#DF9D64] text-[#12060C] font-bold text-xs px-8 py-3 rounded-full uppercase tracking-widest shadow-[0_0_20px_rgba(198,139,89,0.3)] hover:brightness-110 active:scale-95 transition-all font-mono"
                     >
                         Return to Studio
                     </button>

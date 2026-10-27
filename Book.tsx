@@ -1,4 +1,3 @@
-
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -69,13 +68,13 @@ export const Book: React.FC<BookProps> = (props) => {
             {/* LEFT PAGE CONTAINER */}
             {renderLeft && showLeft && (
                 <div 
-                    className="relative shadow-[0_10px_30px_rgba(0,0,0,0.5)] transition-transform hover:scale-[1.01]"
+                    className="relative shadow-[0_10px_35px_rgba(0,0,0,0.7)] transition-transform hover:scale-[1.01] cursor-pointer"
                     style={getAspectRatioStyles(leftFace)}
                     onClick={(e) => { e.stopPropagation(); props.onSheetClick(leftIdx); }}
                 >
                      {/* Page Number Label */}
                      {props.showOverlays && (
-                        <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-zinc-800 text-gray-300 text-xs px-3 py-1 font-bold border border-zinc-600 whitespace-nowrap z-[40]">
+                        <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-[#2A0E20] text-[#DF9D64] text-[10px] px-3 py-0.5 rounded-full font-mono font-bold border border-[#3D1629] whitespace-nowrap z-[40] shadow-md">
                             PAGE {leftIdx}
                         </div>
                      )}
@@ -88,13 +87,13 @@ export const Book: React.FC<BookProps> = (props) => {
             {/* RIGHT PAGE CONTAINER */}
             {renderRight && (
                  <div 
-                    className="relative shadow-[0_10px_30px_rgba(0,0,0,0.5)] transition-transform hover:scale-[1.01]"
+                    className="relative shadow-[0_10px_35px_rgba(0,0,0,0.7)] transition-transform hover:scale-[1.01] cursor-pointer"
                     style={getAspectRatioStyles(rightFace)}
                     onClick={(e) => { e.stopPropagation(); props.onSheetClick(rightIdx); }}
                 >
                      {/* Page Number Label */}
                      {props.showOverlays && (
-                        <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-zinc-800 text-gray-300 text-xs px-3 py-1 font-bold border border-zinc-600 whitespace-nowrap z-[40]">
+                        <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-[#2A0E20] text-[#DF9D64] text-[10px] px-3 py-0.5 rounded-full font-mono font-bold border border-[#3D1629] whitespace-nowrap z-[40] shadow-md">
                             {rightIdx === 0 ? 'COVER' : `PAGE ${rightIdx}`}
                         </div>
                      )}
@@ -105,4 +104,4 @@ export const Book: React.FC<BookProps> = (props) => {
             )}
         </div>
     );
-}
+};

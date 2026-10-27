@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 300" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bronzeLogoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#DF9D64" />
+      <stop offset="45%" stop-color="#C68B59" />
+      <stop offset="100%" stop-color="#B97743" />
+    </linearGradient>
+  </defs>
+
+  <g fill="url(#bronzeLogoGrad)">
+    <!-- 1. Single Far-Left Bronze Dot -->
+    <circle cx="95" cy="150" r="17" />
+
+    <!-- 2. Three Vertical Dots Column -->
+    <circle cx="380" cy="75" r="17" />
+    <circle cx="380" cy="150" r="17" />
+    <circle cx="380" cy="225" r="17" />
+
+    <!-- 3. Two Vertical Dots Column -->
+    <circle cx="500" cy="112" r="17" />
+    <circle cx="500" cy="188" r="17" />
+
+    <!-- 4. The "X" Petal Floral Cross (Roman Numeral X) -->
+    <!-- Top-Left Petal -->
+    <path d="M 645 150 C 625 110, 560 70, 570 65 C 575 60, 615 125, 645 150 Z" />
+    <!-- Top-Right Petal -->
+    <path d="M 645 150 C 665 110, 730 70, 720 65 C 715 60, 675 125, 645 150 Z" />
+    <!-- Bottom-Left Petal -->
+    <path d="M 645 150 C 625 190, 560 230, 570 235 C 575 240, 615 175, 645 150 Z" />
+    <!-- Bottom-Right Petal -->
+    <path d="M 645 150 C 665 190, 730 230, 720 235 C 715 240, 675 175, 645 150 Z" />
+
+    <!-- 5. Roman Numeral "III" Three Pillars -->
+    <!-- Pillar 1: Rounded outer-left edge, flat right -->
+    <path d="M 770 65 C 740 65, 730 80, 730 110 L 730 190 C 730 220, 740 235, 770 235 L 790 235 L 790 65 Z" />
+
+    <!-- Pillar 2: Symmetrical vertical pill / capsule -->
+    <rect x="800" y="65" width="58" height="170" rx="29" />
+
+    <!-- Pillar 3: Flat left, rounded outer-right edge -->
+    <path d="M 868 65 L 888 65 C 918 65, 928 80, 928 110 L 928 190 C 928 220, 918 235, 888 235 L 868 235 Z" />
+
+    <!-- 6. Single Far-Right Bronze Dot -->
+    <circle cx="965" cy="150" r="17" />
+  </g>
+
+  <!-- White Center Pips inside the 3 Pillars -->
+  <g fill="#FAF5F0">
+    <circle cx="760" cy="150" r="14.5" />
+    <circle cx="829" cy="150" r="14.5" />
+    <circle cx="898" cy="150" r="14.5" />
+  </g>
+</svg>

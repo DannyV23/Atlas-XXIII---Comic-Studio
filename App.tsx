@@ -16,10 +16,12 @@ import { Landing } from './Landing';
 import { Restore } from './Restore';
 import { CharacterGen } from './CharacterGen';
 import { AtlasBackground, AtlasFooter } from './AtlasBackgroundAndFooter';
+import { logError, logWarning, logInfo, studioLogger, StudioLogEntry } from './ErrorLogger';
+import { ErrorLoggerModal } from './ErrorLoggerModal';
+import { getActiveApiKey, hasValidApiKey } from './geminiService';
 
 // --- Constants ---
 const MODEL_TEXT_NAME = "gemini-3.8-flash"; 
-const MODEL_VIDEO_GEN_NAME = "veo-3.1-fast-generate-preview";
 const PAGE_HEIGHT = 1000; 
 
 // Interface for Prompt Lab Data
@@ -158,10 +160,15 @@ const App: React.FC = () => {
   const [totalPages, setTotalPages] = useState(0); 
   const [isStarted, setIsStarted] = useState(false);
   
-  // --- Veo Video State ---
-  const [veoPrompt, setVeoPrompt] = useState("");
-  const [movieModeUrlList, setMovieModeUrlList] = useState<string[] | null>(null);
-  const [currentMovieIndex, setCurrentMovieIndex] = useState(0);
+  // --- Diagnostics & Error Logger State ---
+  const [isErrorLoggerOpen, setIsErrorLoggerOpen] = useState(false);
+  const [recentLogs, setRecentLogs] = useState<StudioLogEntry[]>([]);
+
+  useEffect(() => {
+    return studioLogger.subscribe(setRecentLogs);
+  }, []);
+
+  const errorCount = recentLogs.filter(l => l.severity === 'error').length;
 
   // --- Viewport State ---
   const [panPos, setPanPos] = useState({ x: 0, y: 0 });
@@ -177,7 +184,7 @@ const App: React.FC = () => {
   const isResizingCastListRef = useRef(false);
 
   const [activeEditSide, setActiveEditSide] = useState<'left' | 'right'>('right');
-  const [studioMode, setStudioMode] = useState<'editor' | 'veo' | 'refiner' | 'prompt-lab'>('editor');
+  const [studioMode, setStudioMode] = useState<'editor' | 'refiner' | 'prompt-lab'>('editor');
   
   const [panelCount, setPanelCount] = useState(1);
   const [layoutStyle, setLayoutStyle] = useState(LAYOUT_STYLES[0]);
@@ -291,12 +298,9 @@ const App: React.FC = () => {
                       setEditorPanels(initialPanels);
                   }
               }
-              const suggestion = activeFace.videoPrompt || activeFace.panelsData?.[0]?.text || activeFace.narrative?.scene || "";
-              setVeoPrompt(suggestion);
           } else {
               setEditorPanels(Array(panelCount).fill(null).map(() => ({ text: "", castIds: [] })));
               setCompositionImage(null);
-              setVeoPrompt("");
               setIsTextlessCover(false);
           }
           
@@ -313,7 +317,7 @@ const App: React.FC = () => {
 
 
 
-  const handleAPIError = (e: any) => {
+  const handleAPIError = (e: any, context: string = 'Studio Engine') => {
     if (e && (e.name === 'AbortError' || e.message === 'Cancelled')) {
         console.log("Generation cancelled by user.");
         return; 
@@ -333,6 +337,7 @@ const App: React.FC = () => {
     }
 
     console.error("API Error:", e);
+    logError("Studio API Error", msg, "Studio Engine", e?.stack);
     const lowerMsg = msg.toLowerCase();
 
     if (lowerMsg.includes('403') || lowerMsg.includes('permission_denied') || lowerMsg.includes('caller does not have permission') || msg.includes('API_KEY_INVALID')) {
@@ -341,17 +346,17 @@ const App: React.FC = () => {
     }
     
     if (lowerMsg.includes('429') || lowerMsg.includes('quota') || lowerMsg.includes('resourceexhausted')) {
-        setErrorMessage("⚠️ DAILY API QUOTA REACHED (RPD). You have hit the limit for free/tier requests today.");
+        setErrorMessage("⚠️ DAILY API QUOTA REACHED. The request limit has been reached. Please wait or activate a personal Gemini API key.");
         return;
     }
     
     if (lowerMsg.includes('503') || lowerMsg.includes('overloaded') || lowerMsg.includes('unavailable')) {
-        setErrorMessage("⚠️ GOOGLE SERVERS BUSY (503). The AI model is currently overloaded. Please wait 10-30 seconds and try again.");
+        setErrorMessage("⚠️ GOOGLE SERVERS BUSY (503). The AI model is temporarily overloaded. Retrying automatically or wait 10-20 seconds.");
         return;
     }
 
     if (msg.includes('blockReason') && (msg.includes('OTHER') || msg.includes('SAFETY'))) {
-        setErrorMessage("⚠️ CONTENT POLICY BLOCKED. The AI refused the prompt (Reason: SAFETY/OTHER). This often happens with:\n• Wheelchairs/Mobility Aids (AI misinterprets as 'Body Horror').\n• Realistic Weapons.\n• Real-world groups (Police/Military).\nTry softening image details or using 'Mature Mode'.");
+        setErrorMessage("⚠️ CONTENT POLICY BLOCKED. The AI filtered the prompt. Try enabling Mature Mode in settings or adjusting character details.");
         return;
     }
     
@@ -362,7 +367,7 @@ const App: React.FC = () => {
       if (abortControllerRef.current) {
           abortControllerRef.current.abort();
           abortControllerRef.current = null;
-          if (activeFace) updateFaceState(activeFace.id, { isLoading: false, isVideoLoading: false });
+          if (activeFace) updateFaceState(activeFace.id, { isLoading: false });
           setIsRefining(false);
       }
   };
@@ -531,16 +536,20 @@ const App: React.FC = () => {
       if (!input.trim()) return "";
       try {
           const prompt = `You are a professional comic book editor. TASK: Rewrite input to be more vivid. CONTEXT: ${context}. INPUT: "${input}". INSTRUCTIONS: Concise. Visuals only. No markdown.`;
+          const apiKey = getActiveApiKey();
           const res = await fetch("/api/gemini/generate-text", {
               method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ prompt, model: MODEL_TEXT_NAME })
+              headers: { 
+                  "Content-Type": "application/json",
+                  ...(apiKey ? { "x-gemini-api-key": apiKey } : {})
+              },
+              body: JSON.stringify({ prompt, model: MODEL_TEXT_NAME, apiKey })
           });
           const data = await res.json();
           if (data.error) throw new Error(data.error);
           return data.text?.trim() || input;
       } catch (e) {
-          handleAPIError(e);
+          handleAPIError(e, "Text Script Enhancement");
           return input;
       }
   };
@@ -569,15 +578,22 @@ const App: React.FC = () => {
               imageConfig: { aspectRatio: '4:3', imageSize: '2K' }
           };
 
+          const apiKey = getActiveApiKey();
           const res = await fetch("/api/gemini/generate-image", {
               method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ model: imageModel, parts, config })
+              headers: { 
+                  "Content-Type": "application/json",
+                  ...(apiKey ? { "x-gemini-api-key": apiKey } : {})
+              },
+              body: JSON.stringify({ model: imageModel, parts, config, apiKey })
           });
           const data = await res.json();
           if (data.error) throw new Error(data.error);
           return data.imageData || '';
-      } catch (e) { throw e; }
+      } catch (e: any) { 
+          logError("Character Sheet Generation Error", e?.message || "Failed to generate character sheet", `Model: ${imageModel}`);
+          throw e; 
+      }
   };
 
   // --- PREPARATION PHASE (Consolidates Data for Prompt Lab) ---
@@ -841,10 +857,14 @@ const App: React.FC = () => {
             }
           };
 
+          const apiKey = getActiveApiKey();
           const res = await fetch("/api/gemini/generate-image", {
               method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ model: imageModel, parts, config })
+              headers: { 
+                  "Content-Type": "application/json",
+                  ...(apiKey ? { "x-gemini-api-key": apiKey } : {})
+              },
+              body: JSON.stringify({ model: imageModel, parts, config, apiKey })
           });
 
           const data = await res.json();
@@ -929,7 +949,7 @@ const App: React.FC = () => {
       setIsStarted(false);
       setViewMode('landing');
       setAppLanguage('en');
-      setImageModel('gemini-3-pro-image-preview');
+      setImageModel('gemini-nano-banana-2.1');
       setBorderColor('white');
       setShowOverlays(false);
       setIsMatureMode(false);
@@ -970,8 +990,7 @@ const App: React.FC = () => {
               
               saveData.comicFaces = saveData.comicFaces.map((f: any) => ({
                  ...f,
-                 imageUrl: undefined,
-                 videoUrl: undefined
+                 imageUrl: undefined
               }));
               if (saveData.publisher) { saveData.publisher.logoImage = undefined; saveData.publisher.titleLogo = undefined; }
               saveData.previousIssueRefs = [];
@@ -1228,31 +1247,6 @@ const App: React.FC = () => {
     );
   };
   
-  const generatePageVideo = async (pageIndex: number, prompt: string) => { 
-      const face = comicFaces.find(f => f.pageIndex === pageIndex); 
-      if (!face || !face.imageUrl) return; 
-      updateFaceState(face.id, { isVideoLoading: true });
-      abortControllerRef.current = new AbortController();
-      try { 
-          const imageBytes = face.imageUrl.split(',')[1]; 
-          const res = await fetch("/api/gemini/generate-video", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ prompt, imageBytes, mimeType: 'image/jpeg' })
-          });
-          const data = await res.json();
-          if (data.error) throw new Error(data.error);
-          if (data.videoDataUrl) {
-              updateFaceState(face.id, { videoUrl: data.videoDataUrl, isVideoLoading: false, videoPrompt: prompt });
-          } else {
-              throw new Error("No video returned");
-          } 
-      } catch (e) { 
-          handleAPIError(e); 
-          updateFaceState(face.id, { isVideoLoading: false }); 
-      } 
-  };
-  
   const handleAddBackCover = () => {
       const nextIdx = totalPages + 1;
       setTotalPages(nextIdx);
@@ -1309,7 +1303,6 @@ THANKS FOR READING!`,
       jumpToPage(prevIdx);
   };
 
-  const startMovieMode = () => { const urls: string[] = []; const sorted = [...comicFaces].sort((a,b) => (a.pageIndex || 0) - (b.pageIndex || 0)); sorted.forEach(f => { if (f.videoUrl) urls.push(f.videoUrl); }); if (urls.length === 0) { alert("No animated pages found!"); return; } setMovieModeUrlList(urls); setCurrentMovieIndex(0); };
   const launchStory = async () => { const hasKey = await validateApiKey(); if (!hasKey) return; if (!heroRef.current || !comicTitle.trim()) return; setIsTransitioning(true); setTimeout(() => { setViewMode('character-gen'); setIsTransitioning(false); }, 1000); };
   const handleOpenCharacterLab = () => { if (viewMode === 'setup') { setViewMode('character-gen'); } };
   const finalizeCharacterGen = async () => { setIsTransitioning(true); if (!isStarted) { setComicFaces([]); historyRef.current = []; setTotalPages(0); const coverFace: ComicFace = { id: 'page-0', type: 'cover', pageIndex: 0, choices: [], isLoading: false, layout: 'Cover Splash', panelCount: 1, layoutStyle: 'Cover Splash', panelsData: [{ text: coverPrompt, castIds: [] }], narrative: { scene: coverPrompt, choices: [], focus_char: 'hero' } }; setComicFaces([coverFace]); historyRef.current = [coverFace]; setTimeout(async () => { setIsStarted(true); setViewMode('studio'); setIsTransitioning(false); setCurrentSheetIndex(0); setActiveEditSide('right'); }, 1100); } else { setTimeout(async () => { setViewMode('studio'); setIsTransitioning(false); }, 500); } };
@@ -1325,7 +1318,35 @@ THANKS FOR READING!`,
     <div className="comic-scene" onPointerDown={handlePointerDown} onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onWheel={handleWheel}>
       {showApiKeyDialog && <ApiKeyDialog onContinue={handleApiKeyDialogContinue} />}
       {showDownloadModal && <DownloadModal isOpen={showDownloadModal} onClose={() => setShowDownloadModal(false)} onDownload={downloadComic} labels={labels} />}
-      {errorMessage && <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-[1000] animate-in slide-in-from-top-4"><div className="bg-red-600 text-white border-4 border-black p-4 max-w-lg flex items-center gap-4"><div className="text-3xl">⚠️</div><div className="flex-1"><p className="font-sans text-sm font-bold">{errorMessage}</p></div><button onClick={() => setErrorMessage(null)} className="bg-black text-white font-bold px-3 py-1 border border-white font-sans">Dismiss</button></div></div>}
+      {errorMessage && (
+        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-[1000] animate-in slide-in-from-top-4 select-none">
+          <div className="bg-[#1C0A17]/95 backdrop-blur-xl border border-[#DF9E65]/60 p-4 max-w-lg rounded-2xl shadow-2xl flex items-center gap-3.5 text-[#FAF5F0]">
+            <div className="w-8 h-8 rounded-xl bg-[#2A0E20] border border-[#DF9E65]/40 flex items-center justify-center shrink-0 text-base">
+              ⚠️
+            </div>
+            <div className="flex-1 text-xs">
+              <p className="font-sans font-bold leading-relaxed">{errorMessage}</p>
+            </div>
+            <div className="flex items-center gap-1.5 shrink-0">
+              <button 
+                onClick={() => {
+                  setErrorMessage(null);
+                  setIsErrorLoggerOpen(true);
+                }} 
+                className="bg-[#2A0E20] text-[#DF9D64] hover:border-[#DF9D64] border border-[#3D1629] text-[10px] font-mono font-bold px-2.5 py-1 rounded-lg transition-colors"
+              >
+                Logs
+              </button>
+              <button 
+                onClick={() => setErrorMessage(null)} 
+                className="text-[#8A6D7B] hover:text-[#FAF5F0] text-xs font-bold px-1.5 py-1 transition-colors"
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       
       {viewMode === 'landing' && <Landing onNew={() => setViewMode('setup')} onContinue={() => setViewMode('restore')} onChangeApiKey={handleApiKeyDialogContinue} imageModel={imageModel} onImageModelChange={setImageModel} onAppLanguageChange={setAppLanguage} appLanguage={appLanguage} />}
       {viewMode === 'restore' && <Restore onBack={() => setViewMode('landing')} onRestore={restoreSession} appLanguage={appLanguage} />}
@@ -1424,34 +1445,41 @@ THANKS FOR READING!`,
           </div>
       )}
       
-      {viewMode === 'studio' && !movieModeUrlList && (
+      {viewMode === 'studio' && (
         <div onPointerDown={(e) => e.stopPropagation()} onWheel={(e) => e.stopPropagation()} style={{ width: sidebarWidth }} className="fixed right-0 top-0 bottom-0 bg-[#150711]/95 backdrop-blur-2xl text-[#FAF5F0] border-l border-[#3D1629] z-[60] shadow-2xl flex flex-col font-sans cursor-auto select-none">
             <div onPointerDown={handleSidebarResizeStart} className="absolute left-0 top-0 bottom-0 w-4 -ml-2 cursor-col-resize z-50 hover:bg-[#C68B59]/30 flex items-center justify-center group"><div className="h-12 w-1 bg-[#3D1629] group-hover:bg-[#C68B59] rounded"></div></div>
             <div className="flex bg-[#13060E] border-b border-[#3D1629] p-1.5 gap-1">
-                <button onClick={() => setStudioMode('editor')} className={`flex-1 py-2 text-xs uppercase font-bold transition-all font-sans rounded-xl ${studioMode === 'editor' ? 'bg-gradient-to-r from-[#B97743] via-[#C98A55] to-[#DF9D64] text-[#12060C]' : 'text-[#8A6D7B] hover:text-[#FAF5F0]'}`}>📝 {labels.studioEditor}</button>
-                <button onClick={() => setStudioMode('refiner')} className={`flex-1 py-2 text-xs uppercase font-bold transition-all font-sans rounded-xl ${studioMode === 'refiner' ? 'bg-gradient-to-r from-[#B97743] via-[#C98A55] to-[#DF9D64] text-[#12060C]' : 'text-[#8A6D7B] hover:text-[#FAF5F0]'}`}>🎨 {labels.imageRefiner}</button>
-                <button onClick={() => setStudioMode('veo')} className={`flex-1 py-2 text-xs uppercase font-bold transition-all font-sans rounded-xl ${studioMode === 'veo' ? 'bg-gradient-to-r from-[#B97743] via-[#C98A55] to-[#DF9D64] text-[#12060C]' : 'text-[#8A6D7B] hover:text-[#FAF5F0]'}`}>🎥 {labels.veoAnimator}</button>
-                <button onClick={() => setStudioMode('prompt-lab')} className={`flex-1 py-2 text-xs uppercase font-bold transition-all font-sans rounded-xl ${studioMode === 'prompt-lab' ? 'bg-gradient-to-r from-[#B97743] via-[#C98A55] to-[#DF9D64] text-[#12060C]' : 'text-[#8A6D7B] hover:text-[#FAF5F0]'}`}>🔬 {labels.promptLab}</button>
+                <button onClick={() => setStudioMode('editor')} className={`flex-1 py-2 text-xs uppercase font-bold transition-all font-mono rounded-xl ${studioMode === 'editor' ? 'bg-gradient-to-r from-[#B97743] via-[#C98A55] to-[#DF9D64] text-[#12060C] shadow-md' : 'text-[#8A6D7B] hover:text-[#FAF5F0]'}`}>📝 {labels.studioEditor}</button>
+                <button onClick={() => setStudioMode('refiner')} className={`flex-1 py-2 text-xs uppercase font-bold transition-all font-mono rounded-xl ${studioMode === 'refiner' ? 'bg-gradient-to-r from-[#B97743] via-[#C98A55] to-[#DF9D64] text-[#12060C] shadow-md' : 'text-[#8A6D7B] hover:text-[#FAF5F0]'}`}>🎨 {labels.imageRefiner}</button>
+                <button onClick={() => setStudioMode('prompt-lab')} className={`flex-1 py-2 text-xs uppercase font-bold transition-all font-mono rounded-xl ${studioMode === 'prompt-lab' ? 'bg-gradient-to-r from-[#B97743] via-[#C98A55] to-[#DF9D64] text-[#12060C] shadow-md' : 'text-[#8A6D7B] hover:text-[#FAF5F0]'}`}>🔬 {labels.promptLab}</button>
             </div>
 
-            <div className="bg-[#150711] p-3 border-b border-[#3D1629]">
-                <div className="flex justify-between items-center mb-3">
-                    <h2 className="text-sm tracking-widest text-[#C68B59] font-bold uppercase font-sans">
+            <div className="bg-[#150711] p-3.5 border-b border-[#3D1629]">
+                <div className="flex justify-between items-center mb-2.5">
+                    <h2 className="text-xs tracking-widest text-[#C68B59] font-bold uppercase font-mono">
                         {studioMode === 'editor' ? (isCoverPage ? 'COVER CONFIG' : labels.pageConfig) : 
                          studioMode === 'refiner' ? labels.refineStation : 
-                         studioMode === 'veo' ? labels.animationStation : 
                          labels.promptDebugger}
                     </h2>
-                    <button onClick={() => setViewMode('setup')} className="text-xs bg-[#1B0A16] hover:bg-[#2A0E20] px-3 py-1.5 rounded-full border border-[#3D1629] hover:border-[#C68B59] font-sans font-bold text-[#FAF5F0] transition-colors">⚙ {labels.settings}</button>
+                    <button onClick={() => setViewMode('setup')} className="text-xs bg-[#1B0A16] hover:bg-[#2A0E20] px-3 py-1.5 rounded-full border border-[#3D1629] hover:border-[#C68B59] font-mono font-bold text-[#FAF5F0] transition-colors">⚙ {labels.settings}</button>
                 </div>
-                <div className="flex gap-2 items-center bg-[#1B0A16] p-2 rounded-xl border border-[#3D1629]"><span className="text-xs text-[#8A6D7B] font-sans font-bold">{labels.jumpTo}</span><select value={activePageIndex} onChange={(e) => jumpToPage(parseInt(e.target.value))} className="bg-[#150711] text-[#FAF5F0] border border-[#3D1629] text-xs flex-1 cursor-pointer font-sans font-bold p-1.5 rounded-lg focus:outline-none"><option value={0}>{labels.cover}</option>{Array.from({length: totalPages}).map((_, i) => <option key={i+1} value={i+1}>{labels.page} {i+1}</option>)}<option value={totalPages + 1} className="text-[#DF9E65] font-bold">+ {labels.newPage} {totalPages + 1}</option></select></div>
+                <div className="flex gap-2 items-center bg-[#1B0A16] p-2 rounded-xl border border-[#3D1629]"><span className="text-xs text-[#8A6D7B] font-mono font-bold">{labels.jumpTo}</span><select value={activePageIndex} onChange={(e) => jumpToPage(parseInt(e.target.value))} className="bg-[#150711] text-[#FAF5F0] border border-[#3D1629] text-xs flex-1 cursor-pointer font-mono font-bold p-1.5 rounded-lg focus:outline-none"><option value={0}>{labels.cover}</option>{Array.from({length: totalPages}).map((_, i) => <option key={i+1} value={i+1}>{labels.page} {i+1}</option>)}<option value={totalPages + 1} className="text-[#DF9E65] font-bold">+ {labels.newPage} {totalPages + 1}</option></select></div>
             </div>
             
             {(studioMode === 'editor' || studioMode === 'refiner') && (
-                <div className="flex items-center gap-2 p-2.5 bg-[#13060E] border-b border-[#3D1629]">
-                     <span className="text-[10px] font-bold text-[#8A6D7B] uppercase font-sans">{labels.model}</span>
-                     <button onClick={() => setImageModel('gemini-nano-banana-2.1')} className={`text-[10px] px-3 py-1 rounded-full font-sans font-bold transition-all ${imageModel === 'gemini-nano-banana-2.1' ? 'bg-[#2A0E20] text-[#DF9E65] border border-[#C68B59]' : 'bg-[#150711] text-[#8A6D7B] border border-[#3D1629]'}`}>NANO BANANA 2.1 (HQ)</button>
-                     <button onClick={() => setImageModel('gemini-3.1-flash-lite-image')} className={`text-[10px] px-3 py-1 rounded-full font-sans font-bold transition-all ${imageModel === 'gemini-3.1-flash-lite-image' ? 'bg-[#2A0E20] text-[#DF9E65] border border-[#C68B59]' : 'bg-[#150711] text-[#8A6D7B] border border-[#3D1629]'}`}>FLASH LITE (FAST)</button>
+                <div className="flex items-center justify-between p-2.5 bg-[#13060E] border-b border-[#3D1629] text-xs">
+                     <span className="text-[10px] font-bold text-[#8A6D7B] uppercase font-mono">{labels.model}</span>
+                     <select 
+                         value={imageModel} 
+                         onChange={(e) => setImageModel(e.target.value as ImageModel)} 
+                         className="bg-[#1B0A16] text-[#DF9D64] border border-[#3D1629] rounded-lg px-2.5 py-1 text-[11px] font-mono font-bold outline-none"
+                     >
+                         <option value="gemini-nano-banana-2.1">Nano Banana 2.1 Pro 👑</option>
+                         <option value="gemini-3.1-flash-lite-image">Nano Banana Lite ⚡</option>
+                         <option value="gemini-3.1-flash-image">Nano Banana 2.0 Pro (4K)</option>
+                         <option value="gemini-2.5-flash-image">Nano Banana 1 (Classic)</option>
+                         <option value="gemini-3-pro-image">Nano Banana Pro (Creative)</option>
+                     </select>
                 </div>
             )}
             
@@ -1801,37 +1829,19 @@ THANKS FOR READING!`,
                     </div>
                 </div>
             )}
-
-            {studioMode === 'veo' && (
-                <div className="flex-1 flex flex-col bg-[#150711] p-5 overflow-y-auto custom-scrollbar">
-                    <button onClick={startMovieMode} className="w-full mb-4 bg-gradient-to-r from-[#B97743] via-[#C98A55] to-[#DF9D64] text-[#12060C] text-xs py-3 font-bold rounded-full hover:brightness-110 font-sans uppercase tracking-widest shadow-[0_0_20px_rgba(198,139,89,0.25)] transition-all active:scale-95">🍿 {labels.playMovie}</button>
-                    <div className="bg-[#1B0A16] border border-[#3D1629] p-4 rounded-2xl mb-4">
-                        <h3 className="text-[#C68B59] font-bold text-sm mb-1 uppercase font-sans">Motion Director</h3>
-                        <p className="text-[#8A6D7B] text-xs font-sans mb-3">Instruct Veo on how to animate this page.</p>
-                        {activeFace?.imageUrl ? (
-                             <div className="flex flex-col gap-3">
-                                 <textarea value={veoPrompt} onChange={e => setVeoPrompt(e.target.value)} placeholder="Describe movement..." className="w-full h-28 bg-[#0E070C] border border-[#3D1629] rounded-xl p-3 text-xs text-[#FAF5F0] font-sans focus:outline-none focus:border-[#C68B59]"/>
-                                 {activeFace.videoUrl ? (
-                                     <div className="space-y-3"><div className="bg-[#0E070C] border border-[#3D1629] p-2 rounded-xl"><div className="text-[#DF9E65] text-xs font-bold mb-1 uppercase font-sans">PREVIEW:</div><video src={activeFace.videoUrl} controls autoPlay loop className="w-full h-auto border border-[#3D1629] rounded-lg" /></div><button onClick={() => updateFaceState(activeFace.id, { videoUrl: undefined })} className="w-full py-2 bg-[#2A0E20] text-red-300 border border-red-900/50 hover:bg-red-900/30 text-xs font-bold uppercase font-sans rounded-full">{labels.discardVideo}</button></div>
-                                 ) : (
-                                     <button onClick={() => generatePageVideo(activePageIndex, veoPrompt)} disabled={activeFace.isVideoLoading} className={`w-full py-3 text-xs font-bold uppercase rounded-full transition-all font-sans tracking-wider ${activeFace.isVideoLoading ? 'bg-[#2A0E20] text-[#8A6D7B]' : 'bg-gradient-to-r from-[#B97743] via-[#C98A55] to-[#DF9D64] text-[#12060C] hover:brightness-110 active:scale-95'}`}>{activeFace.isVideoLoading ? 'GENERATING...' : labels.generateAnim}</button>
-                                 )}
-                             </div>
-                        ) : (<div className="text-center py-10 text-[#8A6D7B] font-bold border border-dashed border-[#3D1629] rounded-2xl font-sans">GENERATE A STATIC PAGE IMAGE FIRST.</div>)}
-                    </div>
-                </div>
-            )}
         </div>
       )}
 
-      {movieModeUrlList && (
-          <div className="fixed inset-0 z-[1000] bg-black flex flex-col items-center justify-center p-4">
-               <video src={movieModeUrlList[currentMovieIndex]} autoPlay controls className="max-h-[80vh] border-4 border-yellow-400" onEnded={() => currentMovieIndex < movieModeUrlList.length - 1 && setCurrentMovieIndex(prev => prev+1)} />
-               <button onClick={() => setMovieModeUrlList(null)} className="mt-4 text-red-500 border border-red-500 px-4 py-2 hover:bg-red-900 font-sans font-bold">EXIT</button>
-          </div>
-      )}
+      <AtlasFooter 
+        compact={viewMode === 'studio'} 
+        onOpenErrorLogger={() => setIsErrorLoggerOpen(true)}
+        errorCount={errorCount}
+      />
 
-      <AtlasFooter compact={viewMode === 'studio'} />
+      <ErrorLoggerModal
+        isOpen={isErrorLoggerOpen}
+        onClose={() => setIsErrorLoggerOpen(false)}
+      />
     </div>
   );
 };

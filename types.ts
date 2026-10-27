@@ -1,10 +1,9 @@
-
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
 */
 
-export const APP_VERSION = "v1.9.9 (Beta)";
+export const APP_VERSION = "v1.0.0";
 
 export const MAX_STORY_PAGES = 20; 
 export const INITIAL_TOTAL_PAGES = 2; 
@@ -12,7 +11,17 @@ export const INITIAL_PAGES = 2;
 export const GATE_PAGE = 999; 
 export const BATCH_SIZE = 1; 
 
-export const GENRES = ["Classic Horror", "Superhero Action", "Dark Sci-Fi", "High Fantasy", "Neon Noir Detective", "Wasteland Apocalypse", "Lighthearted Comedy", "Teen Drama / Slice of Life", "Custom"];
+export const GENRES = [
+  "Classic Horror", 
+  "Superhero Action", 
+  "Dark Sci-Fi", 
+  "High Fantasy", 
+  "Neon Noir Detective", 
+  "Wasteland Apocalypse", 
+  "Lighthearted Comedy", 
+  "Teen Drama / Slice of Life", 
+  "Custom"
+];
 
 export const CLOTHING_PRESETS: Record<string, string[]> = {
     "Classic Horror": ["Victorian Suit/Dress", "Tattered Survivor Gear", "1920s Detective Coat", "Nightgown/Pajamas", "Priest/Nun Habit"],
@@ -104,7 +113,29 @@ export type Resolution = '1K' | '2K' | '4K';
 export type AspectRatio = '1:1' | '3:4' | '4:3' | '9:16' | '16:9';
 export const ASPECT_RATIOS: AspectRatio[] = ['1:1', '3:4', '4:3', '9:16', '16:9'];
 export type BorderColor = 'black' | 'white';
-export type ImageModel = 'gemini-nano-banana-2.1' | 'gemini-3.1-flash-lite-image' | 'gemini-3-pro-image';
+
+export type ImageModel = 
+  | 'gemini-nano-banana-2.1' 
+  | 'gemini-3.1-flash-lite-image' 
+  | 'gemini-3.1-flash-image' 
+  | 'gemini-2.5-flash-image' 
+  | 'gemini-3-pro-image';
+
+export interface ImageModelOption {
+  id: ImageModel;
+  label: string;
+  badge: string;
+  description: string;
+}
+
+export const IMAGE_MODEL_OPTIONS: ImageModelOption[] = [
+  { id: 'gemini-nano-banana-2.1', label: 'Nano Banana 2.1 Pro', badge: '👑 Flagship', description: 'Maximum character likeness, cinematic panel consistency, and prompt fidelity.' },
+  { id: 'gemini-3.1-flash-lite-image', label: 'Nano Banana Lite', badge: '⚡ Free Tier', description: 'Fast generation with zero wait time, optimized for drafting and layout testing.' },
+  { id: 'gemini-3.1-flash-image', label: 'Nano Banana 2.0 Pro', badge: '4K Ultra', description: 'High-definition generation with ultra-sharp line art and vivid coloring.' },
+  { id: 'gemini-2.5-flash-image', label: 'Nano Banana 1', badge: 'Classic', description: 'Classic balanced image synthesis engine.' },
+  { id: 'gemini-3-pro-image', label: 'Nano Banana Pro', badge: 'Creative', description: 'Advanced artistic interpretation and surreal comic covers.' }
+];
+
 export type AppLanguage = 'en' | 'esp';
 
 export interface CharacterOverride {
@@ -129,9 +160,6 @@ export interface ComicFace {
   imageUrl?: string;
   imageHistory?: string[]; // Array of past generated images for Undo/Redo
   historyIndex?: number;   // Current index in history array
-  videoUrl?: string;
-  videoPrompt?: string;
-  isVideoLoading?: boolean;
   narrative?: Beat;
   panelsData?: PanelData[]; // Persisted editor state for this page
   choices: string[];
@@ -209,18 +237,16 @@ export const UI_LABELS = {
         launching: "LAUNCHING...",
         returnStudio: "RETURN TO STUDIO",
         projectSettings: "PROJECT SETTINGS",
-        comicBookStudio: "COMIC BOOK STUDIO",
+        comicBookStudio: "ATLAS XXIII - COMIC STUDIO",
         startFresh: "Start fresh!",
         resumeWork: "Resume work!",
         createScratch: "Create a brand new story from scratch.",
         uploadRestore: "Upload pages & restore your session.",
         studioEditor: "STUDIO EDITOR",
-        veoAnimator: "VEO ANIMATOR",
         imageRefiner: "IMAGE REFINER",
-        promptLab: "PROMPT LAB", // NEW
-        promptDebugger: "PROMPT DEBUGGER", // NEW
+        promptLab: "PROMPT LAB",
+        promptDebugger: "PROMPT DEBUGGER",
         pageConfig: "PAGE CONFIG",
-        animationStation: "ANIMATION STATION",
         refineStation: "REFINE STUDIO",
         settings: "SETTINGS",
         jumpTo: "JUMP TO:",
@@ -240,9 +266,6 @@ export const UI_LABELS = {
         dlPage: "⬇ IMG", 
         dlMulti: "⬇ MULTI",
         replaceImg: "REPLACE IMG",
-        playMovie: "PLAY FULL MOVIE",
-        generateAnim: "GENERATE ANIMATION",
-        discardVideo: "DISCARD VIDEO & RETRY",
         layoutConfig: "Layout Configuration",
         panelCount: "Panel Count",
         visualStyle: "Visual Style",
@@ -259,7 +282,7 @@ export const UI_LABELS = {
         loadConfig: "Load Config",
         switchKey: "Switch API Key",
         apiQuota: "API Quota Info",
-        nuclearReset: "NUCLEAR RESET",
+        nuclearReset: "RESET STUDIO",
         enterLab: "ENTER CHARACTER LAB",
         singleSpread: "SINGLE PAGE",
         doubleSpread: "2-PAGE SPREAD",
@@ -291,10 +314,10 @@ export const UI_LABELS = {
         loadedFromFile: "LOADED FROM FILE",
         uploadReady: "UPLOAD READY",
         clickReplace: "Click to replace",
-        restoredData: "RESTAURADO (IMG + DATOS)",
-        addPageSlot: "AÑADIR HUECO PÁGINA",
-        resumeProduction: "REANUDAR LA FAENA",
-        waitingData: "ESPERANDO DATOS...",
+        restoredData: "RESTORED (IMG + DATA)",
+        addPageSlot: "ADD PAGE SLOT",
+        resumeProduction: "RESUME PRODUCTION",
+        waitingData: "WAITING FOR DATA...",
         // Multi Download Modal
         multiDownloadTitle: "MULTI-FORMAT DOWNLOAD",
         formatOptions: "Format Options",
@@ -310,7 +333,9 @@ export const UI_LABELS = {
         payloadViewer: "Payload Viewer",
         textPrompt: "Text Prompt",
         addImage: "Add Image",
-        removeImage: "Remove"
+        removeImage: "Remove",
+        errorLogger: "ERROR LOGGER",
+        diagnostics: "DIAGNOSTICS"
     },
     esp: {
         newUniverse: "NUEVO UNIVERSO",
@@ -319,18 +344,16 @@ export const UI_LABELS = {
         launching: "ARRANCANDO...",
         returnStudio: "VOLVER AL ESTUDIO",
         projectSettings: "AJUSTES DEL PROYECTO",
-        comicBookStudio: "ESTUDIO DE CÓMICS",
+        comicBookStudio: "ATLAS XXIII - COMIC STUDIO",
         startFresh: "¡Empezar de cero!",
         resumeWork: "¡Seguir currando!",
         createScratch: "Crea una historia nueva desde cero.",
         uploadRestore: "Sube páginas y restaura tu sesión.",
         studioEditor: "EDITOR DE ESTUDIO",
-        veoAnimator: "ANIMADOR VEO",
         imageRefiner: "REFINADOR DE IMAGEN",
-        promptLab: "LABORATORIO", // NEW
-        promptDebugger: "DEPURADOR DE PROMPT", // NEW
+        promptLab: "LABORATORIO",
+        promptDebugger: "DEPURADOR DE PROMPT",
         pageConfig: "CONFIG DE PÁGINA",
-        animationStation: "ESTACIÓN DE ANIMACIÓN",
         refineStation: "ESTUDIO DE RETOQUE",
         settings: "AJUSTES",
         jumpTo: "IR A:",
@@ -350,9 +373,6 @@ export const UI_LABELS = {
         dlPage: "⬇ IMG",
         dlMulti: "⬇ MULTI",
         replaceImg: "CAMBIAR IMG",
-        playMovie: "VER PELÍCULA",
-        generateAnim: "GENERAR ANIMACIÓN",
-        discardVideo: "DESCARTAR Y REINTENTAR",
         layoutConfig: "Configuración de Diseño",
         panelCount: "Nº Paneles",
         visualStyle: "Estilo Visual",
@@ -415,6 +435,8 @@ export const UI_LABELS = {
         payloadViewer: "Visor de Carga",
         textPrompt: "Prompt de Texto",
         addImage: "Añadir Imagen",
-        removeImage: "Quitar"
+        removeImage: "Quitar",
+        errorLogger: "REGISTRO DE ERRORES",
+        diagnostics: "DIAGNÓSTICOS"
     }
 };
