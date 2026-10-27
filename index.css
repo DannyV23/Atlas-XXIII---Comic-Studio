@@ -1,0 +1,112 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-canvas: #0E070C;
+    --panel-bg: rgba(21, 7, 17, 0.95);
+    --input-bg: #1B0A16;
+    --track-bg: #13060E;
+    --border-color: #3D1629;
+    --pill-bg: #2A0E20;
+    --bronze-accent: #C68B59;
+    --bronze-highlight: #DF9E65;
+    --text-primary: #FAF5F0;
+    --text-body: #EADDE2;
+    --text-muted: #8A6D7B;
+  }
+
+  body {
+    background-color: #0E070C;
+    color: #EADDE2;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    margin: 0;
+    overflow: hidden;
+  }
+}
+
+/* Typography Classes */
+.font-cinzel-dec {
+  font-family: 'Cinzel Decorative', 'Cinzel', serif;
+}
+
+.font-cinzel {
+  font-family: 'Cinzel', serif;
+}
+
+.font-inter {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.font-mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Debossed Box-Shadows for Motif */
+.debossed-plum-circle {
+  box-shadow: 
+    inset 8px 8px 20px rgba(0, 0, 0, 0.8), 
+    inset -4px -4px 12px rgba(255, 255, 255, 0.02);
+}
+
+.debossed-plum-ring {
+  box-shadow: 
+    8px 8px 22px rgba(0, 0, 0, 0.7), 
+    -4px -4px 12px rgba(255, 255, 255, 0.02), 
+    inset 4px 4px 10px rgba(0, 0, 0, 0.6);
+}
+
+/* Scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #13070F;
+}
+::-webkit-scrollbar-thumb {
+  background: #3B1629;
+  border-radius: 9999px;
+  border: 2px solid #13070F;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #C68B59;
+}
+
+.font-comic {
+  font-family: 'Bangers', cursive;
+  letter-spacing: 0.08em;
+}
+
+/* Primary Action Button */
+.btn-primary-bronze {
+  background: linear-gradient(to right, #B97743, #C98A55, #DF9D64);
+  color: #12060C;
+  font-weight: 700;
+  border-radius: 9999px;
+  box-shadow: 0 0 25px rgba(198, 139, 89, 0.35);
+  transition: all 0.2s ease;
+}
+.btn-primary-bronze:hover:not(:disabled) {
+  filter: brightness(1.1);
+  box-shadow: 0 0 35px rgba(198, 139, 89, 0.5);
+  transform: translateY(-1px);
+}
+.btn-primary-bronze:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+/* Secondary Obsidian Button */
+.btn-secondary-obsidian {
+  background-color: #150711;
+  border: 1px solid #3D1629;
+  color: #FAF5F0;
+  border-radius: 9999px;
+  transition: all 0.2s ease;
+}
+.btn-secondary-obsidian:hover:not(:disabled) {
+  border-color: rgba(198, 139, 89, 0.5);
+  background-color: #1B0A16;
+}
+.btn-secondary-obsidian:active:not(:disabled) {
+  transform: scale(0.98);
+}
