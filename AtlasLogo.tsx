@@ -3,7 +3,7 @@ import React from 'react';
 interface Props {
   className?: string;
   size?: 'sm' | 'md' | 'lg' | 'xl' | 'symbol';
-  variant?: 'full' | 'symbol';
+  variant?: 'full' | 'symbol' | 'comicstudio';
   subtitle?: string;
 }
 
@@ -11,7 +11,6 @@ export const AtlasLogo: React.FC<Props> = ({
   className = '', 
   size = 'md', 
   variant, 
-  subtitle = 'COMIC STUDIO' 
 }) => {
   if (variant === 'symbol' || size === 'symbol') {
     return (
@@ -42,17 +41,10 @@ export const AtlasLogo: React.FC<Props> = ({
   return (
     <div className={`flex flex-col items-center justify-center select-none ${className}`}>
       <img 
-        src="/assets/logos_v3/AtlasXXIII_main_prevector_lightversion_v3.png" 
-        alt="Atlas XXIII" 
-        className="h-16 sm:h-20 md:h-24 object-contain filter drop-shadow-[0_4px_25px_rgba(212,154,90,0.3)] transition-transform duration-300 hover:scale-[1.01]"
+        src="/assets/logos_v3/AtlasXXIII_comicstudio_prevector_lightversion_v3.png" 
+        alt="Atlas XXIII Comic Studio" 
+        className="h-20 sm:h-28 md:h-36 object-contain filter drop-shadow-[0_4px_30px_rgba(212,154,90,0.25)] transition-transform duration-300 hover:scale-[1.01]"
       />
-      {subtitle && (
-        <div className="mt-2 flex items-center gap-2 tracking-[0.35em] text-xs font-mono font-bold text-[#DF9D64] uppercase drop-shadow-[0_0_15px_rgba(223,157,100,0.4)]">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#DF9D64] animate-pulse" />
-          <span>{subtitle}</span>
-          <span className="w-1.5 h-1.5 rounded-full bg-[#DF9D64] animate-pulse" />
-        </div>
-      )}
     </div>
   );
 };

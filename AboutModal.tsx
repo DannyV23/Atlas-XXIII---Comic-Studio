@@ -1,5 +1,6 @@
 import React from 'react';
 import { APP_VERSION } from './types';
+import { AtlasLogo } from './AtlasLogo';
 
 interface AboutModalProps {
     onClose: () => void;
@@ -16,10 +17,8 @@ export const AboutModal: React.FC<AboutModalProps> = ({ onClose }) => {
                     ✕
                 </button>
                 
-                <div className="flex flex-col items-center text-center mb-8">
-                    <h2 className="font-cinzel-dec font-bold text-2xl md:text-3xl text-[#FAF5F0] mb-2 uppercase tracking-wider font-mono">
-                        ATLAS XXIII · COMIC STUDIO
-                    </h2>
+                <div className="flex flex-col items-center text-center mb-6">
+                    <AtlasLogo size="md" className="mb-3" />
                     <div className="bg-[#2A0E20] text-[#DF9E65] border border-[#3D1629] px-3.5 py-1 rounded-full font-mono text-xs tracking-widest uppercase font-bold">
                         {APP_VERSION}
                     </div>
