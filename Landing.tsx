@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ImageModel, AppLanguage, UI_LABELS, IMAGE_MODEL_OPTIONS, APP_VERSION } from './types';
 import { TactileBackground } from './TactileBackground';
@@ -34,7 +34,11 @@ export const Landing: React.FC<LandingProps> = ({
     const [missingKeyPrompt, setMissingKeyPrompt] = useState<boolean>(false);
     const [sessionKeyInput, setSessionKeyInput] = useState<string>('');
     const [showKeyText, setShowKeyText] = useState<boolean>(false);
+    const [pulseKeyInput, setPulseKeyInput] = useState<boolean>(false);
     const [recentLogs, setRecentLogs] = useState<StudioLogEntry[]>([]);
+    
+    const keyInputRef = useRef<HTMLInputElement>(null);
+    const configDropdownRef = useRef<HTMLDivElement>(null);
 
     const labels = UI_LABELS[appLanguage];
 
@@ -50,6 +54,20 @@ export const Landing: React.FC<LandingProps> = ({
         const unsub = studioLogger.subscribe((logs) => setRecentLogs(logs));
         return () => unsub();
     }, []);
+
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (configDropdownRef.current && !configDropdownRef.current.contains(e.target as Node)) {
+                setIsConfigOpen(false);
+            }
+        };
+        if (isConfigOpen) {
+            document.addEventListener('pointerdown', handleClickOutside);
+        }
+        return () => {
+            document.removeEventListener('pointerdown', handleClickOutside);
+        };
+    }, [isConfigOpen]);
 
     const handleSaveSessionKey = () => {
         const trimmed = sessionKeyInput.trim();
@@ -101,7 +119,7 @@ export const Landing: React.FC<LandingProps> = ({
                             onClick={() => onAppLanguageChange('en')}
                             className={`text-[11px] px-3.5 py-1 font-bold rounded-full transition-all font-mono cursor-pointer ${
                                 appLanguage === 'en'
-                                    ? 'bg-[#2A0E20] text-[#DF9D64] border border-[#3D1629]'
+                                    ? 'bg-[#C68B59] text-[#12060C] shadow-sm'
                                     : 'text-[#8A6D7B] hover:text-[#FAF5F0]'
                             }`}
                         >
@@ -112,7 +130,7 @@ export const Landing: React.FC<LandingProps> = ({
                             onClick={() => onAppLanguageChange('esp')}
                             className={`text-[11px] px-3.5 py-1 font-bold rounded-full transition-all font-mono cursor-pointer ${
                                 appLanguage === 'esp'
-                                    ? 'bg-[#2A0E20] text-[#DF9D64] border border-[#3D1629]'
+                                    ? 'bg-[#C68B59] text-[#12060C] shadow-sm'
                                     : 'text-[#8A6D7B] hover:text-[#FAF5F0]'
                             }`}
                         >
@@ -121,10 +139,11 @@ export const Landing: React.FC<LandingProps> = ({
                     </div>
 
                     {/* Model Tier Quick Trigger with Anchored Dropdown */}
-                    <div className="relative">
+                    <div ref={configDropdownRef} className="relative">
                         <button
                             type="button"
-                            onClick={() => {
+                            onClick={(e) => {
+                                e.stopPropagation();
                                 setIsConfigOpen(prev => !prev);
                                 setIsKeyDrawerOpen(false);
                             }}
@@ -135,6 +154,7 @@ export const Landing: React.FC<LandingProps> = ({
                             <span className="text-[10px] text-[#DF9D64] bg-[#2A0E20] px-1.5 py-0.5 rounded-full border border-[#3D1629]">
                                 {activeModelOption.badge}
                             </span>
+                            <span className="text-[9px] text-[#8A6D7B] transition-transform duration-200" style={{ transform: isConfigOpen ? 'rotate(180deg)' : 'none' }}>▼</span>
                         </button>
 
                         <AnimatePresence>
@@ -195,7 +215,16 @@ export const Landing: React.FC<LandingProps> = ({
                     <button
                         type="button"
                         onClick={() => {
-                            setIsKeyDrawerOpen(prev => !prev);
+                            if (!hasKey) {
+                                setIsKeyDrawerOpen(true);
+                                setPulseKeyInput(true);
+                                setTimeout(() => {
+                                    keyInputRef.current?.focus();
+                                }, 50);
+                                setTimeout(() => setPulseKeyInput(false), 2000);
+                            } else {
+                                setIsKeyDrawerOpen(prev => !prev);
+                            }
                             setIsConfigOpen(false);
                         }}
                         className={`text-xs font-semibold px-4 py-2 rounded-full border transition-all flex items-center gap-1.5 backdrop-blur-md shadow-sm font-mono cursor-pointer ${
@@ -323,6 +352,7 @@ export const Landing: React.FC<LandingProps> = ({
                                 <div className="flex items-center gap-2">
                                     <div className="relative flex-1">
                                         <input
+                                            ref={keyInputRef}
                                             type={showKeyText ? 'text' : 'password'}
                                             value={sessionKeyInput}
                                             onChange={(e) => setSessionKeyInput(e.target.value)}
@@ -332,7 +362,11 @@ export const Landing: React.FC<LandingProps> = ({
                                                 }
                                             }}
                                             placeholder="Paste Gemini API Key (AIzaSy...)"
-                                            className="w-full bg-[#12060E] border border-[#3D1629] focus:border-[#C68B59] rounded-xl px-3 py-2 text-xs text-[#FAF5F0] placeholder-[#8A6D7B] font-mono outline-none pr-12"
+                                            className={`w-full bg-[#12060E] border rounded-xl px-3 py-2 text-xs text-[#FAF5F0] placeholder-[#8A6D7B] font-mono outline-none pr-12 transition-all duration-300 ${
+                                                pulseKeyInput
+                                                    ? 'border-[#DF9D64] ring-2 ring-[#DF9D64]/60 shadow-[0_0_25px_rgba(223,157,100,0.5)]'
+                                                    : 'border-[#3D1629] focus:border-[#C68B59]'
+                                            }`}
                                         />
                                         <button
                                             type="button"
