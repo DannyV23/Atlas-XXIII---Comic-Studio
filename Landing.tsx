@@ -86,7 +86,7 @@ export const Landing: React.FC<LandingProps> = ({
             <TactileBackground />
 
             {/* Top Navigation Bar */}
-            <header className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 pt-8 flex flex-wrap items-center justify-between gap-4">
+            <header className="relative z-50 w-full max-w-7xl mx-auto px-6 md:px-12 pt-6 sm:pt-8 flex flex-wrap items-center justify-between gap-4 shrink-0">
                 {/* Left: Brand Mini Insignia */}
                 <div className="flex items-center gap-2">
                     <AtlasLogo size="sm" subtitle="" />
@@ -97,8 +97,9 @@ export const Landing: React.FC<LandingProps> = ({
                     {/* Language Switcher */}
                     <div className="flex items-center bg-[#13060E] border border-[#3D1629] p-1 rounded-full shadow-md">
                         <button
+                            type="button"
                             onClick={() => onAppLanguageChange('en')}
-                            className={`text-[11px] px-3 py-1 font-bold rounded-full transition-all font-mono ${
+                            className={`text-[11px] px-3.5 py-1 font-bold rounded-full transition-all font-mono cursor-pointer ${
                                 appLanguage === 'en'
                                     ? 'bg-[#2A0E20] text-[#DF9D64] border border-[#3D1629]'
                                     : 'text-[#8A6D7B] hover:text-[#FAF5F0]'
@@ -107,8 +108,9 @@ export const Landing: React.FC<LandingProps> = ({
                             EN
                         </button>
                         <button
+                            type="button"
                             onClick={() => onAppLanguageChange('esp')}
-                            className={`text-[11px] px-3 py-1 font-bold rounded-full transition-all font-mono ${
+                            className={`text-[11px] px-3.5 py-1 font-bold rounded-full transition-all font-mono cursor-pointer ${
                                 appLanguage === 'esp'
                                     ? 'bg-[#2A0E20] text-[#DF9D64] border border-[#3D1629]'
                                     : 'text-[#8A6D7B] hover:text-[#FAF5F0]'
@@ -118,22 +120,85 @@ export const Landing: React.FC<LandingProps> = ({
                         </button>
                     </div>
 
-                    {/* Model Tier Quick Trigger */}
-                    <button
-                        onClick={() => setIsConfigOpen(prev => !prev)}
-                        className="text-xs font-medium text-[#FAF5F0] px-3.5 py-1.5 rounded-full border border-[#3D1629] bg-[#180B16]/80 hover:bg-[#230F20] transition-all flex items-center gap-2 backdrop-blur-md shadow-sm font-mono"
-                    >
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#D49A5A]" />
-                        <span>{activeModelOption.label}</span>
-                        <span className="text-[10px] text-[#DF9D64] bg-[#2A0E20] px-1.5 py-0.5 rounded-full border border-[#3D1629]">
-                            {activeModelOption.badge}
-                        </span>
-                    </button>
+                    {/* Model Tier Quick Trigger with Anchored Dropdown */}
+                    <div className="relative">
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setIsConfigOpen(prev => !prev);
+                                setIsKeyDrawerOpen(false);
+                            }}
+                            className="text-xs font-medium text-[#FAF5F0] px-4 py-2 rounded-full border border-[#3D1629] bg-[#180B16]/90 hover:bg-[#230F20] transition-all flex items-center gap-2 backdrop-blur-md shadow-sm font-mono cursor-pointer hover:border-[#C68B59]/60"
+                        >
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#D49A5A]" />
+                            <span>{activeModelOption.label}</span>
+                            <span className="text-[10px] text-[#DF9D64] bg-[#2A0E20] px-1.5 py-0.5 rounded-full border border-[#3D1629]">
+                                {activeModelOption.badge}
+                            </span>
+                        </button>
+
+                        <AnimatePresence>
+                            {isConfigOpen && (
+                                <motion.div
+                                    initial={{ opacity: 0, scale: 0.95, y: -6 }}
+                                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                                    exit={{ opacity: 0, scale: 0.95, y: -6 }}
+                                    className="absolute right-0 top-full mt-2 w-80 p-4 bg-[#180B16]/98 border border-[#3D1629] rounded-2xl backdrop-blur-2xl shadow-2xl z-[60] space-y-3 font-sans text-left"
+                                >
+                                    <div className="flex items-center justify-between border-b border-[#3D1629] pb-2">
+                                        <span className="text-xs font-bold uppercase tracking-wider text-[#D49A5A] font-mono">
+                                            Visual Synthesis Engine
+                                        </span>
+                                        <button
+                                            type="button"
+                                            onClick={() => setIsConfigOpen(false)}
+                                            className="text-xs text-[#8A6D7B] hover:text-white px-1.5 py-0.5 rounded cursor-pointer"
+                                        >
+                                            ✕
+                                        </button>
+                                    </div>
+                                    <div className="space-y-1.5 max-h-72 overflow-y-auto pr-1">
+                                        {IMAGE_MODEL_OPTIONS.map((tier) => (
+                                            <button
+                                                type="button"
+                                                key={tier.id}
+                                                onClick={() => {
+                                                    onImageModelChange(tier.id);
+                                                    setIsConfigOpen(false);
+                                                }}
+                                                className={`w-full p-2.5 rounded-xl text-left border transition-all text-xs flex flex-col gap-1 cursor-pointer ${
+                                                    imageModel === tier.id
+                                                        ? 'bg-[#2B1127] border-[#D49A5A] text-[#FAF5F0] font-bold shadow-md'
+                                                        : 'bg-[#120810] border-[#3D1629] text-[#A88B97] hover:border-[#D49A5A]/40 hover:bg-[#1C0B1A]'
+                                                }`}
+                                            >
+                                                <div className="flex items-center justify-between w-full">
+                                                    <span className="truncate text-xs font-bold font-mono text-[#FAF5F0]">
+                                                        {tier.label}
+                                                    </span>
+                                                    <span className="text-[10px] text-[#DF9D64] font-mono bg-[#2A0E20] px-1.5 py-0.5 rounded border border-[#3D1629]">
+                                                        {tier.badge}
+                                                    </span>
+                                                </div>
+                                                <p className="text-[10px] text-[#8A6D7B] font-sans leading-tight">
+                                                    {tier.description}
+                                                </p>
+                                            </button>
+                                        ))}
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </div>
 
                     {/* Session API Key Trigger Pill */}
                     <button
-                        onClick={() => setIsKeyDrawerOpen(prev => !prev)}
-                        className={`text-xs font-semibold px-3.5 py-1.5 rounded-full border transition-all flex items-center gap-1.5 backdrop-blur-md shadow-sm font-mono ${
+                        type="button"
+                        onClick={() => {
+                            setIsKeyDrawerOpen(prev => !prev);
+                            setIsConfigOpen(false);
+                        }}
+                        className={`text-xs font-semibold px-4 py-2 rounded-full border transition-all flex items-center gap-1.5 backdrop-blur-md shadow-sm font-mono cursor-pointer ${
                             hasKey
                                 ? 'bg-[#180B16]/90 border-[#3D1629] hover:border-[#C68B59]/60 text-[#FAF5F0] hover:bg-[#230F20]'
                                 : 'bg-[#2A0E20] border-[#DF9E65]/50 text-[#DF9E65] hover:bg-[#38132B]'
@@ -147,8 +212,9 @@ export const Landing: React.FC<LandingProps> = ({
 
                     {/* Diagnostic / Error Log Pill */}
                     <button
+                        type="button"
                         onClick={() => setIsErrorLogOpen(true)}
-                        className={`text-xs font-mono px-3 py-1.5 rounded-full border transition-all flex items-center gap-1.5 backdrop-blur-md shadow-sm ${
+                        className={`text-xs font-mono px-3.5 py-2 rounded-full border transition-all flex items-center gap-1.5 backdrop-blur-md shadow-sm cursor-pointer ${
                             errorCount > 0
                                 ? 'bg-rose-950/70 border-rose-800 text-rose-300'
                                 : 'bg-[#180B16]/80 border-[#3D1629] hover:border-[#C68B59]/40 text-[#8A6D7B] hover:text-[#FAF5F0]'
@@ -166,11 +232,12 @@ export const Landing: React.FC<LandingProps> = ({
 
                     {/* API Guide Modal Trigger */}
                     <button
+                        type="button"
                         onClick={() => {
                             setMissingKeyPrompt(false);
                             setIsGuideOpen(true);
                         }}
-                        className="text-xs font-medium text-[#FAF5F0] px-4 py-1.5 rounded-full border border-[#3D1629] bg-[#180B16]/80 hover:bg-[#230F20] transition-all backdrop-blur-md shadow-sm font-mono"
+                        className="text-xs font-medium text-[#FAF5F0] px-4 py-2 rounded-full border border-[#3D1629] bg-[#180B16]/80 hover:bg-[#230F20] transition-all backdrop-blur-md shadow-sm font-mono cursor-pointer hover:border-[#C68B59]/50"
                     >
                         Guide
                     </button>
@@ -178,7 +245,7 @@ export const Landing: React.FC<LandingProps> = ({
             </header>
 
             {/* Main Editorial Hero Section — Centered in Viewport */}
-            <main className="relative z-10 flex-1 w-full max-w-4xl mx-auto px-6 flex flex-col items-center justify-center text-center -mt-8 pb-10">
+            <main className="relative z-10 flex-1 w-full max-w-4xl mx-auto px-6 flex flex-col items-center justify-center text-center my-auto pb-8">
                 {/* Central Brand Lockup */}
                 <motion.div
                     initial={{ opacity: 0, y: 15 }}
@@ -303,72 +370,15 @@ export const Landing: React.FC<LandingProps> = ({
                             <span>Active Session Key Ready</span>
                             <span className="text-[#3D1629]">·</span>
                             <button
+                                type="button"
                                 onClick={() => setIsKeyDrawerOpen(true)}
-                                className="text-[#C68B59] hover:underline"
+                                className="text-[#C68B59] hover:underline cursor-pointer"
                             >
                                 Change
                             </button>
                         </div>
                     )}
                 </motion.div>
-
-                {/* Model Tier Config Overlay */}
-                <AnimatePresence>
-                    {isConfigOpen && (
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.95, y: -10 }}
-                            animate={{ opacity: 1, scale: 1, y: 0 }}
-                            exit={{ opacity: 0, scale: 0.95, y: -10 }}
-                            className="mt-6 p-5 bg-[#180B16]/95 border border-[#3D1629] rounded-2xl max-w-xl w-full backdrop-blur-xl shadow-2xl text-left space-y-4"
-                        >
-                            <div className="flex items-center justify-between border-b border-[#3D1629] pb-3">
-                                <div>
-                                    <span className="text-xs font-bold uppercase tracking-wider text-[#D49A5A] font-mono">
-                                        Studio Engine Configuration
-                                    </span>
-                                    <p className="text-[11px] text-[#8A6D7B] mt-0.5">
-                                        Select the active Gemini visual synthesis model for story pages and reference sheets.
-                                    </p>
-                                </div>
-                                <button 
-                                    onClick={() => setIsConfigOpen(false)}
-                                    className="text-xs text-[#8A6D7B] hover:text-white"
-                                >
-                                    ✕
-                                </button>
-                            </div>
-
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                                {IMAGE_MODEL_OPTIONS.map((tier) => (
-                                    <button
-                                        key={tier.id}
-                                        onClick={() => {
-                                            onImageModelChange(tier.id);
-                                            setIsConfigOpen(false);
-                                        }}
-                                        className={`p-3 rounded-xl text-left border transition-all text-xs flex flex-col justify-between gap-1.5 ${
-                                            imageModel === tier.id
-                                                ? 'bg-[#2B1127] border-[#D49A5A] text-[#FAF5F0] font-bold shadow-md'
-                                                : 'bg-[#120810] border-[#3D1629] text-[#A88B97] hover:border-[#D49A5A]/40'
-                                        }`}
-                                    >
-                                        <div className="flex items-center justify-between w-full">
-                                            <span className="truncate text-xs font-bold font-mono text-[#FAF5F0]">
-                                                {tier.label}
-                                            </span>
-                                            <span className="text-[10px] text-[#DF9E65] font-mono bg-[#2A0E20] px-1.5 py-0.5 rounded border border-[#3D1629]">
-                                                {tier.badge}
-                                            </span>
-                                        </div>
-                                        <p className="text-[10px] text-[#8A6D7B] font-sans leading-tight">
-                                            {tier.description}
-                                        </p>
-                                    </button>
-                                ))}
-                            </div>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
             </main>
 
             {/* API Billing Guide Modal */}
