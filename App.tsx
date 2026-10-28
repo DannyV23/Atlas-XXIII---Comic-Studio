@@ -1566,117 +1566,196 @@ THANKS FOR READING!`,
                             <div className="flex items-center gap-3"><div className="w-14 h-14 border border-[#3D1629] bg-[#0E070C] rounded-xl flex items-center justify-center overflow-hidden shrink-0">{compositionImage ? (<img src={`data:image/jpeg;base64,${compositionImage}`} className="w-full h-full object-cover" />) : (<span className="text-[9px] text-[#8A6D7B] text-center font-sans">No Ref</span>)}</div><div className="flex-1"><p className="text-[9px] text-[#8A6D7B] mb-1 font-sans">Influences structure/pose only.</p><div className="flex gap-2"><label className="bg-[#2A0E20] border border-[#3D1629] text-[#FAF5F0] text-[10px] px-2.5 py-1 rounded-full cursor-pointer hover:border-[#C68B59] font-bold uppercase font-sans transition-colors">{labels.uploadRef}<input type="file" accept="image/*" className="hidden" onChange={async (e) => e.target.files?.[0] && setCompositionImage(await fileToBase64(e.target.files[0]))} /></label>{compositionImage && (<button onClick={() => setCompositionImage(null)} className="text-[10px] text-red-400 hover:text-red-300 underline font-sans">{labels.clear}</button>)}</div></div></div>
                         </div>
 
-                        <div className="space-y-2 bg-zinc-800 p-3 border border-gray-700">
-                             <div className="text-sm font-bold text-black uppercase bg-red-500 px-2 py-1 border border-black font-sans inline-block transform -skew-x-6">{labels.layoutConfig}</div>
+                        {/* Layout Configuration Card adhering to Atlas XXIII Sidebar Spec */}
+                        <div className="bg-[#1B0A16] p-4 rounded-2xl border border-[#3D1629] space-y-3">
+                             <div className="text-xs font-bold text-[#C68B59] uppercase tracking-widest font-mono border-b border-[#3D1629] pb-2">
+                                 {labels.layoutConfig}
+                             </div>
                              <div className="grid grid-cols-2 gap-3">
                                  {!isCoverPage && (
                                     <div>
-                                        <label className="text-[10px] font-bold text-gray-400 uppercase block mb-1 font-sans">{labels.panelCount}</label>
-                                        <input type="number" min="1" max="9" value={panelCount} onChange={(e) => setPanelCount(Math.max(1, Math.min(9, parseInt(e.target.value) || 1)))} className="w-full bg-black border border-gray-600 text-white text-center font-bold p-1 font-sans" />
+                                        <label className="text-[10px] font-bold text-[#8A6D7B] uppercase block mb-1.5 font-mono">{labels.panelCount}</label>
+                                        <input 
+                                            type="number" 
+                                            min="1" 
+                                            max="9" 
+                                            value={panelCount} 
+                                            onChange={(e) => setPanelCount(Math.max(1, Math.min(9, parseInt(e.target.value) || 1)))} 
+                                            className="w-full bg-[#13060E] border border-[#3D1629] text-[#FAF5F0] rounded-xl text-center font-mono font-bold py-2 focus:border-[#C68B59] focus:outline-none" 
+                                        />
                                     </div>
                                  )}
                                  <div className={isCoverPage ? 'col-span-2' : ''}>
-                                     <label className="text-[10px] font-bold text-gray-400 uppercase block mb-1 font-sans">{isCoverPage ? 'Cover Layout Style' : labels.visualStyle}</label>
-                                     <select value={layoutStyle} onChange={(e) => setLayoutStyle(e.target.value)} className="w-full border border-gray-600 p-1 bg-black text-white font-sans font-bold text-xs">
+                                     <label className="text-[10px] font-bold text-[#8A6D7B] uppercase block mb-1.5 font-mono">
+                                         {isCoverPage ? 'Cover Layout Style' : labels.visualStyle}
+                                     </label>
+                                     <select 
+                                         value={layoutStyle} 
+                                         onChange={(e) => setLayoutStyle(e.target.value)} 
+                                         className="w-full bg-[#13060E] border border-[#3D1629] hover:border-[#C68B59]/40 focus:border-[#C68B59] rounded-xl px-3 py-2 text-xs text-[#FAF5F0] font-sans transition-all outline-none"
+                                     >
                                          {isCoverPage ? COVER_LAYOUT_STYLES.map(s => <option key={s} value={s}>{s}</option>) : LAYOUT_STYLES.map(s => <option key={s} value={s}>{s}</option>)}
                                      </select>
                                  </div>
                              </div>
                              
                              {isCoverPage && (
-                                 <div className="mt-2 border-t border-gray-700 pt-2">
-                                    <div className="mb-2">
-                                        <label className="text-[10px] font-bold text-gray-400 uppercase block mb-1 font-sans">Title Placement</label>
-                                        <div className="flex gap-2">
-                                            <button onClick={() => setPublisher({...publisher, titlePlacement: 'top'})} className={`flex-1 py-1 text-[9px] font-bold uppercase border ${publisher.titlePlacement !== 'bottom' ? 'bg-white text-black' : 'bg-zinc-900 text-gray-500'}`}>Top</button>
-                                            <button onClick={() => setPublisher({...publisher, titlePlacement: 'bottom'})} className={`flex-1 py-1 text-[9px] font-bold uppercase border ${publisher.titlePlacement === 'bottom' ? 'bg-white text-black' : 'bg-zinc-900 text-gray-500'}`}>Bottom</button>
+                                 <div className="mt-2 border-t border-[#3D1629] pt-3 space-y-3">
+                                    <div>
+                                        <label className="text-[10px] font-bold text-[#8A6D7B] uppercase block mb-1.5 font-mono">Title Placement</label>
+                                        <div className="bg-[#13060E] border border-[#3D1629] p-1 rounded-xl flex shadow-inner gap-1">
+                                            <button 
+                                                onClick={() => setPublisher({...publisher, titlePlacement: 'top'})} 
+                                                className={`flex-1 py-1.5 text-xs font-bold uppercase transition-all rounded-lg font-mono ${publisher.titlePlacement !== 'bottom' ? 'bg-gradient-to-r from-[#B97743] via-[#C98A55] to-[#DF9D64] text-[#12060C] shadow-md' : 'text-[#8A6D7B] hover:text-[#FAF5F0]'}`}
+                                            >
+                                                Top
+                                            </button>
+                                            <button 
+                                                onClick={() => setPublisher({...publisher, titlePlacement: 'bottom'})} 
+                                                className={`flex-1 py-1.5 text-xs font-bold uppercase transition-all rounded-lg font-mono ${publisher.titlePlacement === 'bottom' ? 'bg-gradient-to-r from-[#B97743] via-[#C98A55] to-[#DF9D64] text-[#12060C] shadow-md' : 'text-[#8A6D7B] hover:text-[#FAF5F0]'}`}
+                                            >
+                                                Bottom
+                                            </button>
                                         </div>
                                     </div>
                                     
-                                    <div className="flex gap-2 mb-2">
-                                        <div className="flex-1">
-                                             <span className="text-[10px] text-gray-500 block mb-1">Publisher Logo (Upload)</span>
-                                             <div className="border border-gray-600 bg-black p-1 flex items-center justify-center relative group h-12 cursor-pointer hover:border-white">
+                                    <div className="grid grid-cols-2 gap-2">
+                                        <div>
+                                             <span className="text-[10px] text-[#8A6D7B] font-mono font-bold block mb-1">Publisher Logo</span>
+                                             <div className="border border-[#3D1629] bg-[#13060E] hover:border-[#C68B59]/50 rounded-xl p-2 flex items-center justify-center relative group h-14 cursor-pointer transition-all">
                                                  {publisher.logoImage ? (
                                                      <>
                                                         <img src={`data:image/jpeg;base64,${publisher.logoImage}`} className="h-full object-contain" />
-                                                        <button onClick={() => setPublisher({...publisher, logoImage: undefined})} className="absolute top-0 right-0 bg-red-500 text-white text-[9px] px-1 font-bold">X</button>
+                                                        <button onClick={() => setPublisher({...publisher, logoImage: undefined})} className="absolute top-1 right-1 bg-rose-950/80 border border-rose-900/60 text-rose-200 text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-bold hover:scale-110 transition-transform">✕</button>
                                                      </>
-                                                 ) : <span className="text-[9px] text-gray-500">+ Logo</span>}
+                                                 ) : <span className="text-[10px] text-[#8A6D7B] font-mono">+ Logo</span>}
                                                  <input type="file" accept="image/*" className="absolute inset-0 opacity-0 cursor-pointer" onChange={async (e) => { if(e.target.files?.[0]) { const b64 = await fileToBase64(e.target.files[0]); setPublisher({...publisher, logoImage: b64}); } }} />
                                              </div>
                                         </div>
-                                        <div className="flex-1">
-                                             <span className="text-[10px] text-gray-500 block mb-1">Title Art (Upload)</span>
-                                             <div className="border border-gray-600 bg-black p-1 flex items-center justify-center relative group h-12 cursor-pointer hover:border-white">
+                                        <div>
+                                             <span className="text-[10px] text-[#8A6D7B] font-mono font-bold block mb-1">Title Art</span>
+                                             <div className="border border-[#3D1629] bg-[#13060E] hover:border-[#C68B59]/50 rounded-xl p-2 flex items-center justify-center relative group h-14 cursor-pointer transition-all">
                                                  {publisher.titleLogo ? (
                                                      <>
                                                         <img src={`data:image/jpeg;base64,${publisher.titleLogo}`} className="h-full object-contain" />
-                                                        <button onClick={() => setPublisher({...publisher, titleLogo: undefined})} className="absolute top-0 right-0 bg-red-500 text-white text-[9px] px-1 font-bold">X</button>
+                                                        <button onClick={() => setPublisher({...publisher, titleLogo: undefined})} className="absolute top-1 right-1 bg-rose-950/80 border border-rose-900/60 text-rose-200 text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-bold hover:scale-110 transition-transform">✕</button>
                                                      </>
-                                                 ) : <span className="text-[9px] text-gray-500">+ Title</span>}
+                                                 ) : <span className="text-[10px] text-[#8A6D7B] font-mono">+ Title</span>}
                                                  <input type="file" accept="image/*" className="absolute inset-0 opacity-0 cursor-pointer" onChange={async (e) => { if(e.target.files?.[0]) { const b64 = await fileToBase64(e.target.files[0]); setPublisher({...publisher, titleLogo: b64}); } }} />
                                              </div>
                                         </div>
                                     </div>
 
-                                    <label className="flex items-center gap-2 p-2 bg-black border border-gray-700 cursor-pointer mt-2">
-                                        <input type="checkbox" checked={isTextlessCover} onChange={(e) => setIsTextlessCover(e.target.checked)} className="accent-red-500" />
-                                        <span className="text-xs text-white font-bold font-sans">Generate Textless / Clean Art</span>
+                                    <label className="flex items-center gap-2.5 p-2.5 bg-[#13060E] border border-[#3D1629] hover:border-[#C68B59]/30 rounded-xl cursor-pointer text-xs text-[#EADDE2] font-sans font-medium transition-all">
+                                        <input type="checkbox" checked={isTextlessCover} onChange={(e) => setIsTextlessCover(e.target.checked)} className="accent-[#DF9D64]" />
+                                        <span>Generate Textless / Clean Art</span>
                                     </label>
                                  </div>
                              )}
                         </div>
                         
                         {!isCoverPage && (
-                            <div className="flex flex-wrap gap-1 mt-2">
+                            <div className="flex flex-wrap gap-1.5 bg-[#13060E] border border-[#3D1629] p-1.5 rounded-xl">
                                 {editorPanels.map((_, idx) => (
-                                    <button key={idx} onClick={() => setActivePanelTab(idx)} className={`flex-1 min-w-[80px] py-1 text-[10px] font-bold uppercase border-2 border-black transition-all font-sans ${activePanelTab === idx ? 'bg-yellow-500 text-black transform -translate-y-1' : 'bg-zinc-800 text-gray-400 hover:bg-zinc-700'}`}>Panel {idx + 1}</button>
+                                    <button 
+                                        key={idx} 
+                                        onClick={() => setActivePanelTab(idx)} 
+                                        className={`flex-1 min-w-[70px] py-1.5 text-[11px] font-mono font-bold uppercase transition-all rounded-lg ${activePanelTab === idx ? 'bg-gradient-to-r from-[#B97743] via-[#C98A55] to-[#DF9D64] text-[#12060C] shadow-md' : 'text-[#8A6D7B] hover:text-[#FAF5F0] hover:bg-[#1B0A16]'}`}
+                                    >
+                                        Panel {idx + 1}
+                                    </button>
                                 ))}
                             </div>
                         )}
 
                         {activePanelData && (
-                            <div className="border-2 border-gray-700 p-3 bg-zinc-800 rounded shadow-lg mt-1">
-                                <div className="flex justify-between items-center mb-2">
+                            <div className="bg-[#1B0A16] border border-[#3D1629] p-4 rounded-2xl shadow-xl space-y-3">
+                                <div className="flex justify-between items-center">
                                     <div className="flex items-center gap-2">
-                                        <label className="text-xs font-bold bg-yellow-500 text-black px-2 py-0.5 border border-black font-sans">{isCoverPage ? 'COVER VISUALS' : `PANEL ${activePanelIdx + 1}`}</label>
-                                        <span className="text-[10px] text-gray-400 font-bold uppercase font-sans">{isCoverPage ? 'Art Instructions' : 'Action & Visuals'}</span>
+                                        <span className="text-xs font-bold font-mono bg-[#2A0E20] text-[#DF9E65] px-2.5 py-1 rounded-full border border-[#3D1629] uppercase">
+                                            {isCoverPage ? 'COVER VISUALS' : `PANEL ${activePanelIdx + 1}`}
+                                        </span>
+                                        <span className="text-[10px] text-[#8A6D7B] font-mono uppercase font-bold tracking-wider">
+                                            {isCoverPage ? 'Art Instructions' : 'Action & Visuals'}
+                                        </span>
                                     </div>
-                                    <div className="flex gap-1">
-                                        <button onClick={async () => { setPanelEnhancingIdx(activePanelIdx); const enhanced = await handleEnhanceText(activePanelData.text, "comic book panel description"); const newArr = [...editorPanels]; newArr[activePanelIdx].previousText = newArr[activePanelIdx].text; newArr[activePanelIdx].text = enhanced; setEditorPanels(newArr); setPanelEnhancingIdx(null); }} disabled={panelEnhancingIdx === activePanelIdx || !activePanelData.text} className="text-[9px] bg-purple-600 hover:bg-purple-500 text-white px-2 py-0.5 border border-purple-400 font-bold uppercase font-sans">{panelEnhancingIdx === activePanelIdx ? "..." : "✨ Enhance"}</button>
-                                        {activePanelData.previousText && (<button onClick={() => { const newArr = [...editorPanels]; newArr[activePanelIdx].text = newArr[activePanelIdx].previousText!; newArr[activePanelIdx].previousText = undefined; setEditorPanels(newArr); }} className="text-[9px] bg-gray-600 hover:bg-gray-500 text-white px-2 py-0.5 border border-gray-400 font-bold uppercase font-sans">↩ Undo</button>)}
+                                    <div className="flex gap-1.5">
+                                        <button 
+                                            onClick={async () => { setPanelEnhancingIdx(activePanelIdx); const enhanced = await handleEnhanceText(activePanelData.text, "comic book panel description"); const newArr = [...editorPanels]; newArr[activePanelIdx].previousText = newArr[activePanelIdx].text; newArr[activePanelIdx].text = enhanced; setEditorPanels(newArr); setPanelEnhancingIdx(null); }} 
+                                            disabled={panelEnhancingIdx === activePanelIdx || !activePanelData.text} 
+                                            className="text-[10px] bg-gradient-to-r from-[#B97743] via-[#C98A55] to-[#DF9D64] text-[#12060C] px-3 py-1 rounded-full font-bold uppercase font-mono shadow-[0_0_12px_rgba(198,139,89,0.3)] hover:brightness-110 active:scale-95 transition-all disabled:opacity-40"
+                                        >
+                                            {panelEnhancingIdx === activePanelIdx ? "..." : "✨ Enhance"}
+                                        </button>
+                                        {activePanelData.previousText && (
+                                            <button 
+                                                onClick={() => { const newArr = [...editorPanels]; newArr[activePanelIdx].text = newArr[activePanelIdx].previousText!; newArr[activePanelIdx].previousText = undefined; setEditorPanels(newArr); }} 
+                                                className="text-[10px] bg-[#2A0E20] hover:bg-[#3D1629] text-[#EADDE2] px-2.5 py-1 rounded-full border border-[#3D1629] font-mono font-bold uppercase transition-colors"
+                                            >
+                                                ↩ Undo
+                                            </button>
+                                        )}
                                     </div>
                                 </div>
-                                <textarea value={activePanelData.text} onChange={(e) => { const newArr = [...editorPanels]; newArr[activePanelIdx].text = e.target.value; setEditorPanels(newArr); }} placeholder={isCoverPage ? "Describe the cover art..." : `Describe action for Panel ${activePanelIdx+1}...`} className="w-full h-32 border border-gray-600 p-3 text-sm font-sans mb-3 bg-black text-white placeholder-gray-600 focus:border-yellow-500 focus:outline-none" />
+                                <textarea 
+                                    value={activePanelData.text} 
+                                    onChange={(e) => { const newArr = [...editorPanels]; newArr[activePanelIdx].text = e.target.value; setEditorPanels(newArr); }} 
+                                    placeholder={isCoverPage ? "Describe the cover art..." : `Describe action for Panel ${activePanelIdx+1}...`} 
+                                    className="w-full h-32 border border-[#3D1629] bg-[#13060E] text-[#FAF5F0] placeholder-[#8A6D7B] p-3 text-xs font-sans rounded-xl focus:border-[#C68B59] focus:outline-none resize-none transition-colors" 
+                                />
                                 
-                                <div className="mb-3">
-                                    <p className="text-[10px] font-bold text-gray-400 uppercase mb-2 border-b border-gray-700 pb-1 font-sans">{labels.castInScene} {selectedCastCount > 5 && <span className="text-yellow-500 ml-2">{labels.charLimitWarn}</span>}</p>
-                                    <div className="flex flex-col gap-2 overflow-y-auto custom-scrollbar pr-1 relative border border-zinc-700 bg-black/50" style={{ height: castListHeight }}>
+                                <div className="space-y-2">
+                                    <div className="text-xs font-bold text-[#C68B59] uppercase tracking-widest font-mono border-b border-[#3D1629] pb-1.5 flex justify-between items-center">
+                                        <span>{labels.castInScene}</span>
+                                        {selectedCastCount > 5 && <span className="text-[#DF9E65] text-[10px] font-mono">{labels.charLimitWarn}</span>}
+                                    </div>
+                                    <div className="flex flex-col gap-2 overflow-y-auto custom-scrollbar p-1.5 border border-[#3D1629] bg-[#13060E] rounded-xl" style={{ height: castListHeight }}>
                                         {allCast.map(p => { 
                                             const isChecked = activePanelData.castIds.includes(p.id); 
                                             const overrides = activePanelData.overrides?.[p.id] || { clothingMode: 'default', weaponMode: 'default' }; 
                                             return (
-                                                <div key={p.id} className={`border px-3 py-3 transition-colors flex flex-col gap-2 font-sans ${isChecked ? 'bg-zinc-800 border-green-500' : 'bg-zinc-900 border-gray-800'}`}>
-                                                    <div className="flex items-center gap-4">
-                                                        <input type="checkbox" className="w-5 h-5 accent-green-500 cursor-pointer" checked={isChecked} onChange={(e) => { const newArr = [...editorPanels]; if(e.target.checked) newArr[activePanelIdx].castIds = [...newArr[activePanelIdx].castIds, p.id]; else newArr[activePanelIdx].castIds = newArr[activePanelIdx].castIds.filter(cid => cid !== p.id); setEditorPanels(newArr); }} />
-                                                        <div className="w-14 h-14 shrink-0 rounded bg-gray-800 overflow-hidden border border-gray-500">{p.base64 ? <img src={`data:image/jpeg;base64,${p.base64}`} className="w-full h-full object-cover"/> : <div className="w-full h-full bg-gray-700"/>}</div>
-                                                        <div className="flex flex-col leading-tight"><span className="text-base font-bold text-white font-sans">{p.name}</span><span className="text-xs text-gray-400 uppercase font-sans">{p.role}</span></div>
+                                                <div key={p.id} className={`border rounded-xl px-3 py-2.5 transition-all flex flex-col gap-2 font-sans ${isChecked ? 'bg-[#2A0E20]/70 border-[#C68B59]/80 shadow-md' : 'bg-[#180B16] border-[#3D1629] hover:border-[#3D1629]/90'}`}>
+                                                    <div className="flex items-center gap-3">
+                                                        <input 
+                                                            type="checkbox" 
+                                                            className="w-4 h-4 accent-[#DF9D64] cursor-pointer" 
+                                                            checked={isChecked} 
+                                                            onChange={(e) => { const newArr = [...editorPanels]; if(e.target.checked) newArr[activePanelIdx].castIds = [...newArr[activePanelIdx].castIds, p.id]; else newArr[activePanelIdx].castIds = newArr[activePanelIdx].castIds.filter(cid => cid !== p.id); setEditorPanels(newArr); }} 
+                                                        />
+                                                        <div className="w-12 h-12 shrink-0 rounded-xl bg-[#13060E] overflow-hidden border border-[#3D1629]">
+                                                            {p.base64 ? <img src={`data:image/jpeg;base64,${p.base64}`} className="w-full h-full object-cover"/> : <div className="w-full h-full bg-[#1B0A16] flex items-center justify-center text-[10px] text-[#8A6D7B]">N/A</div>}
+                                                        </div>
+                                                        <div className="flex flex-col leading-tight">
+                                                            <span className="text-sm font-bold text-[#FAF5F0] font-sans">{p.name}</span>
+                                                            <span className="text-[10px] text-[#DF9E65] font-mono uppercase font-bold tracking-wider">{p.role}</span>
+                                                        </div>
                                                     </div>
                                                     {isChecked && (
-                                                        <div className="pl-9 grid gap-2 pt-1 animate-in fade-in">
+                                                        <div className="pl-7 grid gap-2 pt-1 animate-in fade-in">
                                                             <div className="flex flex-col">
-                                                                <select className="text-xs border border-gray-600 bg-black text-gray-300 p-1 font-sans" value={overrides.clothingMode} onChange={(e) => { const newArr = [...editorPanels]; if (!newArr[activePanelIdx].overrides) newArr[activePanelIdx].overrides = {}; newArr[activePanelIdx].overrides![p.id] = { ...overrides, clothingMode: e.target.value as any }; setEditorPanels(newArr); }}>
+                                                                <select 
+                                                                    className="text-xs border border-[#3D1629] bg-[#13060E] text-[#EADDE2] p-2 rounded-xl font-sans outline-none focus:border-[#C68B59]" 
+                                                                    value={overrides.clothingMode} 
+                                                                    onChange={(e) => { const newArr = [...editorPanels]; if (!newArr[activePanelIdx].overrides) newArr[activePanelIdx].overrides = {}; newArr[activePanelIdx].overrides![p.id] = { ...overrides, clothingMode: e.target.value as any }; setEditorPanels(newArr); }}
+                                                                >
                                                                     <option value="default">Look: {p.clothing.substring(0, 20)}...</option>
                                                                     <option value="custom">Specific Look...</option>
                                                                 </select>
-                                                                {overrides.clothingMode === 'custom' && (<input type="text" className="mt-1 text-xs border border-yellow-600 p-1 w-full bg-zinc-800 text-yellow-200 placeholder-yellow-700 font-sans" placeholder="E.g. Torn battle armor..." value={overrides.clothingCustom || ""} onChange={(e) => { const newArr = [...editorPanels]; newArr[activePanelIdx].overrides![p.id].clothingCustom = e.target.value; setEditorPanels(newArr); }} />)}
+                                                                {overrides.clothingMode === 'custom' && (
+                                                                    <input 
+                                                                        type="text" 
+                                                                        className="mt-1 text-xs border border-[#C68B59]/60 p-2 w-full bg-[#1B0A16] text-[#FAF5F0] placeholder-[#8A6D7B] rounded-xl font-sans outline-none" 
+                                                                        placeholder="E.g. Torn battle armor..." 
+                                                                        value={overrides.clothingCustom || ""} 
+                                                                        onChange={(e) => { const newArr = [...editorPanels]; newArr[activePanelIdx].overrides![p.id].clothingCustom = e.target.value; setEditorPanels(newArr); }} 
+                                                                    />
+                                                                )}
                                                             </div>
 
-                                                            <div className="flex flex-col mt-1">
-                                                                <label className="text-[9px] text-gray-500 uppercase font-bold mb-0.5">Weapon / Item</label>
+                                                            <div className="flex flex-col mt-0.5">
+                                                                <label className="text-[9px] text-[#8A6D7B] font-mono uppercase font-bold mb-1">Weapon / Item</label>
                                                                 <select 
-                                                                    className="w-full text-xs border border-gray-600 bg-black text-gray-300 p-1 font-sans"
+                                                                    className="w-full text-xs border border-[#3D1629] bg-[#13060E] text-[#EADDE2] p-2 rounded-xl font-sans outline-none focus:border-[#C68B59]"
                                                                     value={overrides.selectedPropId || (overrides.weaponMode === 'none' ? 'none' : (overrides.weaponMode === 'custom' ? 'custom' : 'default'))}
                                                                     onChange={(e) => {
                                                                         const val = e.target.value;
@@ -1711,7 +1790,13 @@ THANKS FOR READING!`,
                                                                     )}
                                                                 </select>
                                                                 {overrides.weaponMode === 'custom' && (
-                                                                     <input type="text" className="mt-1 text-xs border border-orange-600 p-1 w-full bg-zinc-800 text-orange-200 placeholder-orange-700 font-sans" placeholder="E.g. Holding a golden key..." value={overrides.weaponCustom || ""} onChange={(e) => { const newArr = [...editorPanels]; newArr[activePanelIdx].overrides![p.id].weaponCustom = e.target.value; setEditorPanels(newArr); }} />
+                                                                     <input 
+                                                                        type="text" 
+                                                                        className="mt-1 text-xs border border-[#C68B59]/60 p-2 w-full bg-[#1B0A16] text-[#FAF5F0] placeholder-[#8A6D7B] rounded-xl font-sans outline-none" 
+                                                                        placeholder="E.g. Holding a golden key..." 
+                                                                        value={overrides.weaponCustom || ""} 
+                                                                        onChange={(e) => { const newArr = [...editorPanels]; newArr[activePanelIdx].overrides![p.id].weaponCustom = e.target.value; setEditorPanels(newArr); }} 
+                                                                    />
                                                                 )}
                                                             </div>
                                                         </div>
@@ -1720,51 +1805,63 @@ THANKS FOR READING!`,
                                             )
                                         })}
                                     </div>
-                                    <div onPointerDown={handleCastListResizeStart} className="h-4 bg-zinc-800 cursor-row-resize flex justify-center items-center border-t border-gray-600 hover:bg-zinc-700 transition-colors"><div className="w-10 h-1 bg-gray-500 rounded"></div></div>
+                                    <div onPointerDown={handleCastListResizeStart} className="h-3.5 bg-[#13060E] cursor-row-resize flex justify-center items-center border border-[#3D1629] hover:bg-[#1B0A16] transition-colors rounded-xl">
+                                        <div className="w-10 h-1 bg-[#3D1629] group-hover:bg-[#C68B59] rounded-full"></div>
+                                    </div>
                                 </div>
                                 {!isCoverPage && (
                                     <div>
-                                        <p className="text-[10px] font-bold text-gray-400 uppercase mb-1 font-sans">{labels.locationOverride}</p>
-                                        <select value={activePanelData.locationId || ""} onChange={(e) => { const newArr = [...editorPanels]; newArr[activePanelIdx].locationId = e.target.value || undefined; setEditorPanels(newArr); }} className="w-full text-xs p-2 border border-gray-600 bg-black text-white font-sans"><option value="">Same as Page / Continuity</option><option value="NA">N/A (Use Script Description)</option>{savedLocations.map(l => <option key={l.id} value={l.id}>{l.name}</option>)}</select>
+                                        <p className="text-[10px] font-bold text-[#8A6D7B] uppercase mb-1.5 font-mono">{labels.locationOverride}</p>
+                                        <select 
+                                            value={activePanelData.locationId || ""} 
+                                            onChange={(e) => { const newArr = [...editorPanels]; newArr[activePanelIdx].locationId = e.target.value || undefined; setEditorPanels(newArr); }} 
+                                            className="w-full text-xs p-2.5 rounded-xl border border-[#3D1629] bg-[#13060E] text-[#FAF5F0] font-sans focus:border-[#C68B59] outline-none"
+                                        >
+                                            <option value="">Same as Page / Continuity</option>
+                                            <option value="NA">N/A (Use Script Description)</option>
+                                            {savedLocations.map(l => <option key={l.id} value={l.id}>{l.name}</option>)}
+                                        </select>
                                     </div>
                                 )}
                             </div>
                         )}
                         
-                        <div className="space-y-2 mt-4 border-t border-gray-700 pt-4">
-                            <label className="text-sm font-bold text-black uppercase bg-green-500 px-2 py-1 border border-black font-sans inline-block">Location Library (Quick Add)</label>
-                            <div className="flex gap-2 items-center overflow-x-auto pb-2 custom-scrollbar mb-2">
+                        <div className="space-y-3 mt-4 border-t border-[#3D1629] pt-4">
+                            <div className="text-xs font-bold text-[#C68B59] uppercase tracking-widest font-mono border-b border-[#3D1629] pb-2">
+                                Location Library (Quick Add)
+                            </div>
+                            <div className="flex gap-2 items-center overflow-x-auto pb-2 custom-scrollbar">
                                 {savedLocations.map(l => (
-                                    <div key={l.id} onClick={() => handleLoadLocationForEdit(l)} className="shrink-0 w-16 h-16 border border-gray-600 relative group cursor-pointer">
-                                        <div className="w-full h-full bg-zinc-800 flex items-center justify-center text-[8px] text-center p-1 text-gray-300 font-sans">{l.description?.substring(0,20)}...</div>
-                                        <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center text-[8px] text-white text-center p-1 transition-opacity font-sans">{l.name}</div>
+                                    <div key={l.id} onClick={() => handleLoadLocationForEdit(l)} className="shrink-0 w-16 h-16 border border-[#3D1629] hover:border-[#C68B59] rounded-xl relative group cursor-pointer overflow-hidden transition-colors">
+                                        <div className="w-full h-full bg-[#13060E] flex items-center justify-center text-[9px] text-center p-1 text-[#8A6D7B] font-sans">{l.description?.substring(0,20)}...</div>
+                                        <div className="absolute inset-0 bg-[#0E070C]/90 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center text-[9px] text-[#FAF5F0] text-center p-1 transition-opacity font-sans font-bold">{l.name}</div>
                                     </div>
                                 ))}
                             </div>
-                            <div className="border border-gray-600 p-2 bg-zinc-800">
-                                {editingLocationId && <div className="text-xs text-yellow-400 font-bold mb-1 uppercase font-sans">EDITING: {savedLocations.find(l => l.id === editingLocationId)?.name}</div>}
-                                <input placeholder="Location Name (e.g. Batcave)" value={newLocName} onChange={e => setNewLocName(e.target.value)} className="w-full text-xs p-1 mb-2 bg-black border border-gray-600 text-white font-sans" />
+                            <div className="border border-[#3D1629] p-3 bg-[#1B0A16] rounded-2xl space-y-2">
+                                {editingLocationId && <div className="text-xs text-[#DF9E65] font-bold font-mono uppercase">EDITING: {savedLocations.find(l => l.id === editingLocationId)?.name}</div>}
+                                <input placeholder="Location Name (e.g. Batcave)" value={newLocName} onChange={e => setNewLocName(e.target.value)} className="w-full text-xs p-2.5 bg-[#13060E] border border-[#3D1629] text-[#FAF5F0] rounded-xl font-sans focus:border-[#C68B59] outline-none" />
                                 <div className="flex gap-2">
-                                    <input placeholder="Description..." value={newLocDesc} onChange={e => setNewLocDesc(e.target.value)} className="flex-1 text-xs p-1 bg-black border border-gray-600 text-white font-sans" />
-                                    <button onClick={() => { if(newLocName && newLocDesc) { const newLoc: LocationRef = { id: editingLocationId || Date.now().toString(), name: newLocName, type: 'text', description: newLocDesc }; if(editingLocationId) handleUpdateLocation(editingLocationId, newLoc); else handleAddLocation(newLoc); setNewLocName(""); setNewLocDesc(""); setEditingLocationId(null); } }} className="bg-green-600 text-white text-xs px-2 font-bold uppercase font-sans">{editingLocationId ? 'UPDATE' : 'ADD'}</button>
+                                    <input placeholder="Description..." value={newLocDesc} onChange={e => setNewLocDesc(e.target.value)} className="flex-1 text-xs p-2.5 bg-[#13060E] border border-[#3D1629] text-[#FAF5F0] rounded-xl font-sans focus:border-[#C68B59] outline-none" />
+                                    <button onClick={() => { if(newLocName && newLocDesc) { const newLoc: LocationRef = { id: editingLocationId || Date.now().toString(), name: newLocName, type: 'text', description: newLocDesc }; if(editingLocationId) handleUpdateLocation(editingLocationId, newLoc); else handleAddLocation(newLoc); setNewLocName(""); setNewLocDesc(""); setEditingLocationId(null); } }} className="bg-gradient-to-r from-[#B97743] via-[#C98A55] to-[#DF9D64] text-[#12060C] text-xs px-4 rounded-xl font-mono font-bold uppercase shadow-md hover:brightness-110 active:scale-95 transition-all">{editingLocationId ? 'UPDATE' : 'ADD'}</button>
                                 </div>
-                                {editingLocationId && <button onClick={() => { setEditingLocationId(null); setNewLocName(""); setNewLocDesc(""); }} className="text-[9px] text-gray-400 hover:text-white mt-1 underline font-sans">CANCEL EDIT</button>}
+                                {editingLocationId && <button onClick={() => { setEditingLocationId(null); setNewLocName(""); setNewLocDesc(""); }} className="text-[10px] text-[#8A6D7B] hover:text-[#FAF5F0] mt-1 underline font-mono">CANCEL EDIT</button>}
                             </div>
                         </div>
                         
                         {activePageIsNew && (
                             <div className="flex flex-col gap-2 mt-4">
-                                <button onClick={() => { setEditorPanels([{ text: "END_STORY", castIds: [] }]); handleExecuteFromEditor(); }} className="w-full border-2 border-dashed border-red-800 text-red-500 py-2 text-sm hover:bg-red-900/20 font-bold font-sans">⚠ END STORY HERE</button>
-                                <button onClick={handleAddBackCover} className="w-full border-2 border-black bg-zinc-800 text-gray-400 py-2 text-sm hover:text-white font-bold font-sans hover:bg-zinc-700">📜 ADD CREDITS PAGE (BACK COVER)</button>
+                                <button onClick={() => { setEditorPanels([{ text: "END_STORY", castIds: [] }]); handleExecuteFromEditor(); }} className="w-full border border-rose-900/60 bg-rose-950/20 text-rose-300 py-2.5 rounded-xl text-xs hover:bg-rose-900/30 font-bold font-mono uppercase tracking-wider transition-colors">⚠ END STORY HERE</button>
+                                <button onClick={handleAddBackCover} className="w-full border border-[#3D1629] bg-[#180B16] text-[#FAF5F0] py-2.5 rounded-xl text-xs hover:border-[#C68B59] font-bold font-mono uppercase tracking-wider transition-colors">📜 ADD CREDITS PAGE (BACK COVER)</button>
                             </div>
                         )}
 
                         {activePageIndex > 0 && (
-                            <div className="mt-4 border-t border-gray-700 pt-4 pb-4">
-                                <button onClick={handleDeletePage} className="w-full bg-red-900/20 border border-red-800 text-red-500 hover:bg-red-900/50 hover:text-white py-2 text-xs font-bold uppercase font-sans transition-colors">
+                            <div className="mt-4 border-t border-[#3D1629] pt-4 pb-2">
+                                <button onClick={handleDeletePage} className="w-full bg-rose-950/30 border border-rose-900/60 text-rose-300 hover:bg-rose-900/50 hover:text-white py-2.5 rounded-xl text-xs font-mono font-bold uppercase transition-colors">
                                     🗑️ Delete This Page ({activePageIndex})
                                 </button>
-                                <p className="text-[9px] text-gray-500 text-center mt-1 font-sans">Removes current page & renumbers subsequent pages.</p>
+                                <p className="text-[10px] text-[#8A6D7B] text-center mt-1.5 font-sans">Removes current page & renumbers subsequent pages.</p>
                             </div>
                         )}
                     </div>
