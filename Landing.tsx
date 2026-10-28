@@ -81,7 +81,7 @@ export const Landing: React.FC<LandingProps> = ({
     const errorCount = recentLogs.filter(l => l.severity === 'error').length;
 
     return (
-        <div className="relative min-h-screen w-full bg-[#0E070C] text-[#FAF5F0] overflow-hidden flex flex-col justify-between select-none font-sans">
+        <div className="relative h-screen min-h-screen w-full bg-[#0E070C] text-[#FAF5F0] overflow-hidden flex flex-col select-none font-sans">
             {/* Tactile Background Motif */}
             <TactileBackground />
 
@@ -177,8 +177,8 @@ export const Landing: React.FC<LandingProps> = ({
                 </div>
             </header>
 
-            {/* Main Editorial Hero Section */}
-            <main className="relative z-10 w-full max-w-4xl mx-auto px-6 py-12 md:py-20 flex flex-col items-center justify-center text-center">
+            {/* Main Editorial Hero Section — Centered in Viewport */}
+            <main className="relative z-10 flex-1 w-full max-w-4xl mx-auto px-6 flex flex-col items-center justify-center text-center -mt-8 pb-10">
                 {/* Central Brand Lockup */}
                 <motion.div
                     initial={{ opacity: 0, y: 15 }}
