@@ -370,7 +370,7 @@ export const Setup: React.FC<SetupProps> = (props) => {
         
         <div className="fixed inset-0 z-[200] overflow-y-auto bg-[#0E070C] text-[#FAF5F0] font-sans select-none">
           <AtlasBackground />
-          <div className={`min-h-full w-full p-6 md:p-10 ${props.isStarted ? 'pb-10' : 'pb-32'} relative text-center max-w-7xl mx-auto z-10`}>
+          <div className="min-h-full w-full p-6 md:p-10 pb-36 md:pb-44 relative text-center max-w-7xl mx-auto z-10">
                 {props.isStarted && (
                     <button 
                         onClick={props.onClose} 
@@ -719,7 +719,6 @@ export const Setup: React.FC<SetupProps> = (props) => {
                 )}
           </div>
         </div>
-        {!props.isStarted && <AtlasFooter />}
         </>
     );
 };

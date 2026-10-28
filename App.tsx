@@ -1436,7 +1436,10 @@ THANKS FOR READING!`,
       )}
 
       {viewMode === 'studio' && (
-          <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-[100] bg-[#150711]/90 backdrop-blur-xl border border-[#3D1629] rounded-full p-1.5 flex gap-1 shadow-2xl">
+          <div 
+            style={{ left: `calc((100vw - ${sidebarWidth}px) / 2)` }}
+            className="fixed top-4 transform -translate-x-1/2 z-[100] bg-[#150711]/90 backdrop-blur-xl border border-[#3D1629] rounded-full p-1.5 flex gap-1 shadow-2xl transition-all duration-150"
+          >
               <button onClick={handlePrevSheet} disabled={currentSheetIndex <= 0} className="px-3.5 py-1 text-xs font-bold uppercase transition-colors font-sans text-[#8A6D7B] hover:text-[#FAF5F0] disabled:opacity-30 border-r border-[#3D1629] hover:bg-[#1B0A16] rounded-l-full">&lt;</button>
               <button onClick={() => setDisplayMode('single')} className={`px-4 py-1 text-xs font-bold uppercase transition-all font-sans rounded-full ${displayMode === 'single' ? 'bg-gradient-to-r from-[#B97743] via-[#C98A55] to-[#DF9D64] text-[#12060C]' : 'text-[#8A6D7B] hover:text-[#FAF5F0]'}`}>{labels.singleSpread}</button>
               <button onClick={() => setDisplayMode('double')} className={`px-4 py-1 text-xs font-bold uppercase transition-all font-sans rounded-full ${displayMode === 'double' ? 'bg-gradient-to-r from-[#B97743] via-[#C98A55] to-[#DF9D64] text-[#12060C]' : 'text-[#8A6D7B] hover:text-[#FAF5F0]'}`}>{labels.doubleSpread}</button>
@@ -1930,7 +1933,8 @@ THANKS FOR READING!`,
       )}
 
       <AtlasFooter 
-        compact={viewMode === 'studio'} 
+        currentView={viewMode}
+        sidebarWidth={sidebarWidth}
         onOpenErrorLogger={() => setIsErrorLoggerOpen(true)}
         errorCount={errorCount}
       />
