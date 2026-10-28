@@ -200,7 +200,7 @@ export const Landing: React.FC<LandingProps> = ({
                         {/* Primary Action Button: Start Fresh / New Universe */}
                         <button
                             onClick={() => handleEnter(onNew)}
-                            className="bg-gradient-to-r from-[#D49A5A] to-[#A66B32] hover:from-[#E2A767] hover:to-[#B5783C] text-[#120810] font-bold text-xs md:text-sm px-9 py-4 rounded-full shadow-[0_0_30px_rgba(212,154,90,0.35)] transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center gap-2 font-mono uppercase tracking-wider"
+                            className="btn-studio-bronze text-xs md:text-sm px-9 py-4 rounded-full shadow-[0_0_30px_rgba(212,154,90,0.35)] transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center gap-2 font-mono uppercase tracking-wider"
                         >
                             <span>✨</span>
                             <span>{labels.newUniverse}</span>
@@ -278,7 +278,7 @@ export const Landing: React.FC<LandingProps> = ({
                                     <button
                                         onClick={handleSaveSessionKey}
                                         disabled={!sessionKeyInput.trim()}
-                                        className="bg-gradient-to-r from-[#B97743] via-[#C98A55] to-[#DF9D64] text-[#12060C] font-bold text-xs px-4 py-2 rounded-xl transition-all hover:brightness-110 active:scale-95 disabled:opacity-40 shrink-0 shadow-sm font-mono uppercase"
+                                        className="btn-studio-bronze text-xs px-4 py-2 rounded-xl transition-all disabled:opacity-40 shrink-0 shadow-sm font-mono uppercase"
                                     >
                                         Activate
                                     </button>
@@ -370,35 +370,6 @@ export const Landing: React.FC<LandingProps> = ({
                     )}
                 </AnimatePresence>
             </main>
-
-            {/* Unified Atlas XXIII Bottom Panel adhering strictly to Rule 14 */}
-            <footer className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 py-6 border-t border-[#3D1629]/40 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] font-mono tracking-wider text-[#8A6D7B]">
-                <div className="flex items-center gap-2">
-                    <a
-                        href="https://atlasxxiii.app"
-                        className="text-[#FAF5F0] hover:text-[#DF9D64] font-semibold transition-colors"
-                    >
-                        Atlas XXIII
-                    </a>
-                    <span aria-hidden="true" className="text-[#3D1629]">·</span>
-                    <span>Created by</span>
-                    <a
-                        href="https://www.instagram.com/dannyvain/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-[#DF9D64] hover:text-[#FAF5F0] transition-colors font-medium underline underline-offset-4 decoration-[#C68B59]/40"
-                    >
-                        Danny Vain
-                    </a>
-                </div>
-                <div className="flex items-center gap-2.5 font-mono">
-                    <span className="uppercase tracking-widest text-[#8A6D7B] text-[10px]">Comic Studio</span>
-                    <span aria-hidden="true" className="text-[#3D1629]">·</span>
-                    <span className="text-[10px] font-mono text-[#DF9D64] bg-[#2A0E20] px-2.5 py-0.5 rounded-full border border-[#3D1629] font-semibold">
-                        {APP_VERSION}
-                    </span>
-                </div>
-            </footer>
 
             {/* API Billing Guide Modal */}
             <BillingGuideModal

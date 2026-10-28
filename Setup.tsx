@@ -401,7 +401,7 @@ export const Setup: React.FC<SetupProps> = (props) => {
                                     onClick={() => setActiveTab(tab)} 
                                     className={`px-5 py-2 font-bold uppercase transition-all font-mono text-xs tracking-wider rounded-full ${
                                         activeTab === tab 
-                                            ? 'bg-gradient-to-r from-[#B97743] via-[#C98A55] to-[#DF9D64] text-[#12060C] shadow-[0_0_15px_rgba(198,139,89,0.3)]' 
+                                            ? 'btn-bronze-active shadow-[0_0_15px_rgba(198,139,89,0.3)]' 
                                             : 'text-[#8A6D7B] hover:text-[#FAF5F0]'
                                     }`}
                                 >
@@ -492,7 +492,7 @@ export const Setup: React.FC<SetupProps> = (props) => {
                             </div>
                             
                             {props.isStarted && (
-                                <button onClick={props.onOpenCharacterLab} className="w-full py-3 bg-gradient-to-r from-[#B97743] via-[#C98A55] to-[#DF9D64] text-[#12060C] font-mono font-bold text-xs uppercase rounded-full shadow-lg hover:brightness-110 transition-all">
+                                <button onClick={props.onOpenCharacterLab} className="w-full py-3.5 btn-studio-bronze font-mono font-bold text-xs uppercase rounded-full shadow-lg">
                                     {labels.enterLab} 🧪
                                 </button>
                             )}
@@ -696,7 +696,7 @@ export const Setup: React.FC<SetupProps> = (props) => {
                     <div className="flex flex-col items-center gap-5 mt-10 max-w-xl mx-auto border-t border-[#3D1629] pt-8">
                         <button 
                             onClick={props.onLaunch} 
-                            className="bg-gradient-to-r from-[#D49A5A] to-[#A66B32] hover:from-[#E2A767] hover:to-[#B5783C] text-[#120810] font-bold text-sm md:text-base px-12 py-4 rounded-full shadow-[0_0_30px_rgba(212,154,90,0.35)] transition-all hover:scale-[1.02] active:scale-[0.98] font-mono uppercase tracking-widest"
+                            className="btn-studio-bronze text-sm md:text-base px-12 py-4 rounded-full shadow-[0_0_30px_rgba(212,154,90,0.35)] transition-all hover:scale-[1.02] active:scale-[0.98] font-mono uppercase tracking-widest"
                         >
                             {labels.startAdventure}
                         </button>

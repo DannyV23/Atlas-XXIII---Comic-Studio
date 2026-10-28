@@ -77,21 +77,27 @@
   letter-spacing: 0.08em;
 }
 
-/* Primary Action Button */
-.btn-primary-bronze {
-  background: linear-gradient(to right, #B97743, #C98A55, #DF9D64);
-  color: #12060C;
-  font-weight: 700;
-  border-radius: 9999px;
-  box-shadow: 0 0 25px rgba(198, 139, 89, 0.35);
+/* Primary Action Button — Rich Studio Bronze (No Muddy Fades) */
+.btn-primary-bronze,
+.btn-studio-bronze,
+.btn-bronze-active {
+  background: linear-gradient(135deg, #C68B59 0%, #DF9E65 100%) !important;
+  color: #12060C !important;
+  font-weight: 700 !important;
+  box-shadow: 0 4px 18px rgba(198, 139, 89, 0.32);
   transition: all 0.2s ease;
 }
-.btn-primary-bronze:hover:not(:disabled) {
-  filter: brightness(1.1);
-  box-shadow: 0 0 35px rgba(198, 139, 89, 0.5);
+.btn-primary-bronze:hover:not(:disabled),
+.btn-studio-bronze:hover:not(:disabled),
+.btn-bronze-active:hover:not(:disabled) {
+  background: linear-gradient(135deg, #D49A5A 0%, #EAA972 100%) !important;
+  filter: brightness(1.06);
+  box-shadow: 0 6px 25px rgba(198, 139, 89, 0.45);
   transform: translateY(-1px);
 }
-.btn-primary-bronze:active:not(:disabled) {
+.btn-primary-bronze:active:not(:disabled),
+.btn-studio-bronze:active:not(:disabled),
+.btn-bronze-active:active:not(:disabled) {
   transform: scale(0.98);
 }
 

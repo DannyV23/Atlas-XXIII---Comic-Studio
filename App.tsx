@@ -1441,20 +1441,20 @@ THANKS FOR READING!`,
             className="fixed top-4 transform -translate-x-1/2 z-[100] bg-[#150711]/90 backdrop-blur-xl border border-[#3D1629] rounded-full p-1.5 flex gap-1 shadow-2xl transition-all duration-150"
           >
               <button onClick={handlePrevSheet} disabled={currentSheetIndex <= 0} className="px-3.5 py-1 text-xs font-bold uppercase transition-colors font-sans text-[#8A6D7B] hover:text-[#FAF5F0] disabled:opacity-30 border-r border-[#3D1629] hover:bg-[#1B0A16] rounded-l-full">&lt;</button>
-              <button onClick={() => setDisplayMode('single')} className={`px-4 py-1 text-xs font-bold uppercase transition-all font-sans rounded-full ${displayMode === 'single' ? 'bg-gradient-to-r from-[#B97743] via-[#C98A55] to-[#DF9D64] text-[#12060C]' : 'text-[#8A6D7B] hover:text-[#FAF5F0]'}`}>{labels.singleSpread}</button>
-              <button onClick={() => setDisplayMode('double')} className={`px-4 py-1 text-xs font-bold uppercase transition-all font-sans rounded-full ${displayMode === 'double' ? 'bg-gradient-to-r from-[#B97743] via-[#C98A55] to-[#DF9D64] text-[#12060C]' : 'text-[#8A6D7B] hover:text-[#FAF5F0]'}`}>{labels.doubleSpread}</button>
+              <button onClick={() => setDisplayMode('single')} className={`px-4 py-1 text-xs font-bold uppercase transition-all font-sans rounded-full ${displayMode === 'single' ? 'btn-bronze-active' : 'text-[#8A6D7B] hover:text-[#FAF5F0]'}`}>{labels.singleSpread}</button>
+              <button onClick={() => setDisplayMode('double')} className={`px-4 py-1 text-xs font-bold uppercase transition-all font-sans rounded-full ${displayMode === 'double' ? 'btn-bronze-active' : 'text-[#8A6D7B] hover:text-[#FAF5F0]'}`}>{labels.doubleSpread}</button>
               <button onClick={handleNextSheet} disabled={currentSheetIndex >= Math.ceil(totalPages/2)} className="px-3.5 py-1 text-xs font-bold uppercase transition-colors font-sans text-[#8A6D7B] hover:text-[#FAF5F0] disabled:opacity-30 border-l border-[#3D1629] hover:bg-[#1B0A16]">&gt;</button>
               <button onClick={handleRecenter} className={`ml-1 px-4 py-1 rounded-full text-xs font-bold uppercase transition-colors font-sans text-[#8A6D7B] hover:text-[#FAF5F0] border border-[#3D1629] hover:border-[#C68B59]`}>⌖ {labels.recenter}</button>
           </div>
       )}
       
       {viewMode === 'studio' && (
-        <div onPointerDown={(e) => e.stopPropagation()} onWheel={(e) => e.stopPropagation()} style={{ width: sidebarWidth }} className="fixed right-0 top-0 bottom-0 bg-[#150711]/95 backdrop-blur-2xl text-[#FAF5F0] border-l border-[#3D1629] z-[60] shadow-2xl flex flex-col font-sans cursor-auto select-none">
+        <div onPointerDown={(e) => e.stopPropagation()} onWheel={(e) => e.stopPropagation()} style={{ width: sidebarWidth }} className="fixed right-0 top-0 bottom-0 bg-[#150711] text-[#FAF5F0] border-l border-[#3D1629] z-[60] shadow-2xl flex flex-col font-sans cursor-auto select-none">
             <div onPointerDown={handleSidebarResizeStart} className="absolute left-0 top-0 bottom-0 w-4 -ml-2 cursor-col-resize z-50 hover:bg-[#C68B59]/30 flex items-center justify-center group"><div className="h-12 w-1 bg-[#3D1629] group-hover:bg-[#C68B59] rounded"></div></div>
             <div className="flex bg-[#13060E] border-b border-[#3D1629] p-1.5 gap-1">
-                <button onClick={() => setStudioMode('editor')} className={`flex-1 py-2 text-xs uppercase font-bold transition-all font-mono rounded-xl ${studioMode === 'editor' ? 'bg-gradient-to-r from-[#B97743] via-[#C98A55] to-[#DF9D64] text-[#12060C] shadow-md' : 'text-[#8A6D7B] hover:text-[#FAF5F0]'}`}>📝 {labels.studioEditor}</button>
-                <button onClick={() => setStudioMode('refiner')} className={`flex-1 py-2 text-xs uppercase font-bold transition-all font-mono rounded-xl ${studioMode === 'refiner' ? 'bg-gradient-to-r from-[#B97743] via-[#C98A55] to-[#DF9D64] text-[#12060C] shadow-md' : 'text-[#8A6D7B] hover:text-[#FAF5F0]'}`}>🎨 {labels.imageRefiner}</button>
-                <button onClick={() => setStudioMode('prompt-lab')} className={`flex-1 py-2 text-xs uppercase font-bold transition-all font-mono rounded-xl ${studioMode === 'prompt-lab' ? 'bg-gradient-to-r from-[#B97743] via-[#C98A55] to-[#DF9D64] text-[#12060C] shadow-md' : 'text-[#8A6D7B] hover:text-[#FAF5F0]'}`}>🔬 {labels.promptLab}</button>
+                <button onClick={() => setStudioMode('editor')} className={`flex-1 py-2 text-xs uppercase font-bold transition-all font-mono rounded-xl ${studioMode === 'editor' ? 'btn-bronze-active shadow-md' : 'text-[#8A6D7B] hover:text-[#FAF5F0]'}`}>📝 {labels.studioEditor}</button>
+                <button onClick={() => setStudioMode('refiner')} className={`flex-1 py-2 text-xs uppercase font-bold transition-all font-mono rounded-xl ${studioMode === 'refiner' ? 'btn-bronze-active shadow-md' : 'text-[#8A6D7B] hover:text-[#FAF5F0]'}`}>🎨 {labels.imageRefiner}</button>
+                <button onClick={() => setStudioMode('prompt-lab')} className={`flex-1 py-2 text-xs uppercase font-bold transition-all font-mono rounded-xl ${studioMode === 'prompt-lab' ? 'btn-bronze-active shadow-md' : 'text-[#8A6D7B] hover:text-[#FAF5F0]'}`}>🔬 {labels.promptLab}</button>
             </div>
 
             <div className="bg-[#150711] p-3.5 border-b border-[#3D1629]">
@@ -1464,7 +1464,14 @@ THANKS FOR READING!`,
                          studioMode === 'refiner' ? labels.refineStation : 
                          labels.promptDebugger}
                     </h2>
-                    <button onClick={() => setViewMode('setup')} className="text-xs bg-[#1B0A16] hover:bg-[#2A0E20] px-3 py-1.5 rounded-full border border-[#3D1629] hover:border-[#C68B59] font-mono font-bold text-[#FAF5F0] transition-colors">⚙ {labels.settings}</button>
+                    <div className="flex items-center gap-2">
+                        <button onClick={() => setIsErrorLoggerOpen(true)} className="text-[10px] bg-[#1B0A16] hover:bg-[#2A0E20] px-2.5 py-1 rounded-full border border-[#3D1629] hover:border-[#C68B59] font-mono text-[#8A6D7B] hover:text-[#FAF5F0] transition-colors flex items-center gap-1">
+                            <span>🛠️</span>
+                            <span>Logs</span>
+                            {errorCount > 0 && <span className="text-rose-400 font-bold">({errorCount})</span>}
+                        </button>
+                        <button onClick={() => setViewMode('setup')} className="text-xs bg-[#1B0A16] hover:bg-[#2A0E20] px-3 py-1.5 rounded-full border border-[#3D1629] hover:border-[#C68B59] font-mono font-bold text-[#FAF5F0] transition-colors">⚙ {labels.settings}</button>
+                    </div>
                 </div>
                 <div className="flex gap-2 items-center bg-[#1B0A16] p-2 rounded-xl border border-[#3D1629]"><span className="text-xs text-[#8A6D7B] font-mono font-bold">{labels.jumpTo}</span><select value={activePageIndex} onChange={(e) => jumpToPage(parseInt(e.target.value))} className="bg-[#150711] text-[#FAF5F0] border border-[#3D1629] text-xs flex-1 cursor-pointer font-mono font-bold p-1.5 rounded-lg focus:outline-none"><option value={0}>{labels.cover}</option>{Array.from({length: totalPages}).map((_, i) => <option key={i+1} value={i+1}>{labels.page} {i+1}</option>)}<option value={totalPages + 1} className="text-[#DF9E65] font-bold">+ {labels.newPage} {totalPages + 1}</option></select></div>
             </div>
@@ -1533,7 +1540,7 @@ THANKS FOR READING!`,
                                 />
                             </div>
 
-                            <button onClick={() => executePromptLab()} className="w-full py-3.5 bg-gradient-to-r from-[#B97743] via-[#C98A55] to-[#DF9D64] text-[#12060C] font-bold text-base uppercase rounded-full shadow-[0_0_20px_rgba(198,139,89,0.3)] hover:brightness-110 active:scale-95 transition-all font-sans tracking-widest">
+                            <button onClick={() => executePromptLab()} className="w-full py-3.5 btn-studio-bronze font-bold text-base uppercase rounded-full tracking-widest font-sans">
                                 {activeFaceLoading ? "EXECUTING..." : labels.executePrompt}
                             </button>
                         </>
@@ -1609,13 +1616,13 @@ THANKS FOR READING!`,
                                         <div className="bg-[#13060E] border border-[#3D1629] p-1 rounded-xl flex shadow-inner gap-1">
                                             <button 
                                                 onClick={() => setPublisher({...publisher, titlePlacement: 'top'})} 
-                                                className={`flex-1 py-1.5 text-xs font-bold uppercase transition-all rounded-lg font-mono ${publisher.titlePlacement !== 'bottom' ? 'bg-gradient-to-r from-[#B97743] via-[#C98A55] to-[#DF9D64] text-[#12060C] shadow-md' : 'text-[#8A6D7B] hover:text-[#FAF5F0]'}`}
+                                                className={`flex-1 py-1.5 text-xs font-bold uppercase transition-all rounded-lg font-mono ${publisher.titlePlacement !== 'bottom' ? 'btn-bronze-active shadow-md' : 'text-[#8A6D7B] hover:text-[#FAF5F0]'}`}
                                             >
                                                 Top
                                             </button>
                                             <button 
                                                 onClick={() => setPublisher({...publisher, titlePlacement: 'bottom'})} 
-                                                className={`flex-1 py-1.5 text-xs font-bold uppercase transition-all rounded-lg font-mono ${publisher.titlePlacement === 'bottom' ? 'bg-gradient-to-r from-[#B97743] via-[#C98A55] to-[#DF9D64] text-[#12060C] shadow-md' : 'text-[#8A6D7B] hover:text-[#FAF5F0]'}`}
+                                                className={`flex-1 py-1.5 text-xs font-bold uppercase transition-all rounded-lg font-mono ${publisher.titlePlacement === 'bottom' ? 'btn-bronze-active shadow-md' : 'text-[#8A6D7B] hover:text-[#FAF5F0]'}`}
                                             >
                                                 Bottom
                                             </button>
@@ -1663,7 +1670,7 @@ THANKS FOR READING!`,
                                     <button 
                                         key={idx} 
                                         onClick={() => setActivePanelTab(idx)} 
-                                        className={`flex-1 min-w-[70px] py-1.5 text-[11px] font-mono font-bold uppercase transition-all rounded-lg ${activePanelTab === idx ? 'bg-gradient-to-r from-[#B97743] via-[#C98A55] to-[#DF9D64] text-[#12060C] shadow-md' : 'text-[#8A6D7B] hover:text-[#FAF5F0] hover:bg-[#1B0A16]'}`}
+                                        className={`flex-1 min-w-[70px] py-1.5 text-[11px] font-mono font-bold uppercase transition-all rounded-lg ${activePanelTab === idx ? 'btn-bronze-active shadow-md' : 'text-[#8A6D7B] hover:text-[#FAF5F0] hover:bg-[#1B0A16]'}`}
                                     >
                                         Panel {idx + 1}
                                     </button>
@@ -1686,7 +1693,7 @@ THANKS FOR READING!`,
                                         <button 
                                             onClick={async () => { setPanelEnhancingIdx(activePanelIdx); const enhanced = await handleEnhanceText(activePanelData.text, "comic book panel description"); const newArr = [...editorPanels]; newArr[activePanelIdx].previousText = newArr[activePanelIdx].text; newArr[activePanelIdx].text = enhanced; setEditorPanels(newArr); setPanelEnhancingIdx(null); }} 
                                             disabled={panelEnhancingIdx === activePanelIdx || !activePanelData.text} 
-                                            className="text-[10px] bg-gradient-to-r from-[#B97743] via-[#C98A55] to-[#DF9D64] text-[#12060C] px-3 py-1 rounded-full font-bold uppercase font-mono shadow-[0_0_12px_rgba(198,139,89,0.3)] hover:brightness-110 active:scale-95 transition-all disabled:opacity-40"
+                                            className="text-[10px] btn-bronze-active px-3 py-1 rounded-full font-bold uppercase font-mono shadow-sm disabled:opacity-40"
                                         >
                                             {panelEnhancingIdx === activePanelIdx ? "..." : "✨ Enhance"}
                                         </button>
@@ -1846,7 +1853,7 @@ THANKS FOR READING!`,
                                 <input placeholder="Location Name (e.g. Batcave)" value={newLocName} onChange={e => setNewLocName(e.target.value)} className="w-full text-xs p-2.5 bg-[#13060E] border border-[#3D1629] text-[#FAF5F0] rounded-xl font-sans focus:border-[#C68B59] outline-none" />
                                 <div className="flex gap-2">
                                     <input placeholder="Description..." value={newLocDesc} onChange={e => setNewLocDesc(e.target.value)} className="flex-1 text-xs p-2.5 bg-[#13060E] border border-[#3D1629] text-[#FAF5F0] rounded-xl font-sans focus:border-[#C68B59] outline-none" />
-                                    <button onClick={() => { if(newLocName && newLocDesc) { const newLoc: LocationRef = { id: editingLocationId || Date.now().toString(), name: newLocName, type: 'text', description: newLocDesc }; if(editingLocationId) handleUpdateLocation(editingLocationId, newLoc); else handleAddLocation(newLoc); setNewLocName(""); setNewLocDesc(""); setEditingLocationId(null); } }} className="bg-gradient-to-r from-[#B97743] via-[#C98A55] to-[#DF9D64] text-[#12060C] text-xs px-4 rounded-xl font-mono font-bold uppercase shadow-md hover:brightness-110 active:scale-95 transition-all">{editingLocationId ? 'UPDATE' : 'ADD'}</button>
+                                    <button onClick={() => { if(newLocName && newLocDesc) { const newLoc: LocationRef = { id: editingLocationId || Date.now().toString(), name: newLocName, type: 'text', description: newLocDesc }; if(editingLocationId) handleUpdateLocation(editingLocationId, newLoc); else handleAddLocation(newLoc); setNewLocName(""); setNewLocDesc(""); setEditingLocationId(null); } }} className="btn-studio-bronze text-xs px-4 rounded-xl font-mono font-bold uppercase shadow-md">{editingLocationId ? 'UPDATE' : 'ADD'}</button>
                                 </div>
                                 {editingLocationId && <button onClick={() => { setEditingLocationId(null); setNewLocName(""); setNewLocDesc(""); }} className="text-[10px] text-[#8A6D7B] hover:text-[#FAF5F0] mt-1 underline font-mono">CANCEL EDIT</button>}
                             </div>
@@ -1871,9 +1878,9 @@ THANKS FOR READING!`,
                     
                     <div className="p-4 bg-[#13060E] border-t border-[#3D1629]">
                         {activeFaceLoading ? (
-                             <button onClick={handleCancelGeneration} className="w-full text-base py-3 rounded-full border border-red-800 bg-red-950/60 text-red-200 animate-pulse uppercase tracking-widest font-sans font-bold hover:bg-red-900/50 transition-colors">⛔ STOP GENERATION</button>
+                             <button onClick={handleCancelGeneration} className="w-full text-base py-3 rounded-full border border-rose-800 bg-rose-950/60 text-rose-200 animate-pulse uppercase tracking-widest font-sans font-bold hover:bg-rose-900/50 transition-colors">⛔ STOP GENERATION</button>
                         ) : (
-                            <button onClick={() => handleExecuteFromEditor(false)} className="w-full text-base py-3.5 rounded-full font-sans font-bold uppercase tracking-widest bg-gradient-to-r from-[#B97743] via-[#C98A55] to-[#DF9D64] text-[#12060C] hover:brightness-110 active:scale-95 transition-all shadow-[0_0_20px_rgba(198,139,89,0.3)]">{activeFace ? labels.regenerate : labels.generatePage}</button>
+                            <button onClick={() => handleExecuteFromEditor(false)} className="w-full text-base py-3.5 rounded-full font-sans font-bold uppercase tracking-widest btn-studio-bronze shadow-[0_0_20px_rgba(198,139,89,0.3)]">{activeFace ? labels.regenerate : labels.generatePage}</button>
                         )}
                         <div className="flex gap-2 mt-3">
                             <label className="flex-1 block group"><div className="w-full bg-[#1B0A16] text-[#C68B59] text-[11px] py-2 border border-[#3D1629] rounded-full group-hover:border-[#C68B59] group-hover:text-[#FAF5F0] font-sans font-bold uppercase tracking-wider transition-colors text-center cursor-pointer">♻ {labels.replaceImg}</div><input type="file" accept="image/*" className="hidden" onChange={(e) => e.target.files?.[0] && handleReplacePageImage(e.target.files[0])} /></label>
@@ -1922,7 +1929,7 @@ THANKS FOR READING!`,
                                     </div>
                                 </div>
                                 <div className="space-y-3 pt-3 border-t border-[#3D1629]">
-                                    {activeFaceLoading ? (<button onClick={handleCancelGeneration} className="w-full py-3 bg-red-950/50 text-red-200 border border-red-800 rounded-full animate-pulse font-bold font-sans uppercase">⛔ STOP REFINE</button>) : (<button onClick={() => handleExecuteFromEditor(true)} disabled={!refineInstruction} className="w-full bg-gradient-to-r from-[#B97743] via-[#C98A55] to-[#DF9D64] text-[#12060C] text-xs py-3 font-bold font-sans uppercase tracking-wider rounded-full hover:brightness-110 active:scale-95 transition-all disabled:opacity-40">{labels.applyEdit}</button>)}
+                                    {activeFaceLoading ? (<button onClick={handleCancelGeneration} className="w-full py-3 bg-rose-950/50 text-rose-200 border border-rose-800 rounded-full animate-pulse font-bold font-sans uppercase">⛔ STOP REFINE</button>) : (<button onClick={() => handleExecuteFromEditor(true)} disabled={!refineInstruction} className="w-full btn-studio-bronze text-xs py-3.5 font-bold font-sans uppercase tracking-wider rounded-full disabled:opacity-40">{labels.applyEdit}</button>)}
                                 </div>
                             </div>
                         ) : (<div className="text-center py-10 text-[#8A6D7B] font-bold border border-dashed border-[#3D1629] rounded-2xl font-sans">GENERATE AN IMAGE FIRST TO EDIT.</div>)}
@@ -1931,13 +1938,6 @@ THANKS FOR READING!`,
             )}
         </div>
       )}
-
-      <AtlasFooter 
-        currentView={viewMode}
-        sidebarWidth={sidebarWidth}
-        onOpenErrorLogger={() => setIsErrorLoggerOpen(true)}
-        errorCount={errorCount}
-      />
 
       <ErrorLoggerModal
         isOpen={isErrorLoggerOpen}
