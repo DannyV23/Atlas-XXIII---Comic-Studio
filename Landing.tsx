@@ -5,6 +5,7 @@ import { TactileBackground } from './TactileBackground';
 import { AtlasLogo } from './AtlasLogo';
 import { BillingGuideModal } from './BillingGuideModal';
 import { ErrorLoggerModal } from './ErrorLoggerModal';
+import { UpdateLogModal } from './UpdateLogModal';
 import { getActiveApiKey, hasValidApiKey } from './geminiService';
 import { studioLogger, StudioLogEntry } from './ErrorLogger';
 
@@ -31,6 +32,7 @@ export const Landing: React.FC<LandingProps> = ({
     const [isKeyDrawerOpen, setIsKeyDrawerOpen] = useState<boolean>(false);
     const [isGuideOpen, setIsGuideOpen] = useState<boolean>(false);
     const [isErrorLogOpen, setIsErrorLogOpen] = useState<boolean>(false);
+    const [isUpdateLogOpen, setIsUpdateLogOpen] = useState<boolean>(false);
     const [missingKeyPrompt, setMissingKeyPrompt] = useState<boolean>(false);
     const [sessionKeyInput, setSessionKeyInput] = useState<string>('');
     const [showKeyText, setShowKeyText] = useState<boolean>(false);
@@ -415,6 +417,40 @@ export const Landing: React.FC<LandingProps> = ({
                 </motion.div>
             </main>
 
+            {/* Bottom Credits Bar */}
+            <footer className="relative z-20 w-full max-w-7xl mx-auto px-6 md:px-12 py-3 flex flex-wrap items-center justify-between gap-4 text-[11px] font-mono tracking-wider text-[#8A6D7B] shrink-0 border-t border-[#3D1629]/40 bg-[#0E070C]/80 backdrop-blur-md">
+                <div className="flex items-center gap-2">
+                    <a
+                        href="https://atlasxxiii.app"
+                        className="text-[#FAF5F0] hover:text-[#DF9D64] font-semibold transition-colors"
+                    >
+                        Atlas XXIII
+                    </a>
+                    <span aria-hidden="true" className="text-[#3D1629]">·</span>
+                    <span className="hidden sm:inline">Created by</span>
+                    <a
+                        href="https://www.instagram.com/dannyvain/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[#DF9D64] hover:text-[#FAF5F0] transition-colors font-medium underline underline-offset-4 decoration-[#C68B59]/40"
+                    >
+                        Danny Vain
+                    </a>
+                </div>
+                <div className="flex items-center gap-2.5 font-mono">
+                    <span className="uppercase tracking-widest text-[#8A6D7B] text-[10px] hidden sm:inline">Comic Studio</span>
+                    <span aria-hidden="true" className="text-[#3D1629] hidden sm:inline">·</span>
+                    <button
+                        type="button"
+                        onClick={() => setIsUpdateLogOpen(true)}
+                        className="text-[10px] font-mono text-[#DF9D64] bg-[#2A0E20] hover:bg-[#38132B] hover:border-[#C68B59] px-2.5 py-0.5 rounded-full border border-[#3D1629] font-semibold transition-all cursor-pointer hover:scale-105 active:scale-95"
+                        title="View Comic Studio Release Ledger & Update Log"
+                    >
+                        {APP_VERSION}
+                    </button>
+                </div>
+            </footer>
+
             {/* API Billing Guide Modal */}
             <BillingGuideModal
                 isOpen={isGuideOpen}
@@ -432,6 +468,12 @@ export const Landing: React.FC<LandingProps> = ({
             <ErrorLoggerModal
                 isOpen={isErrorLogOpen}
                 onClose={() => setIsErrorLogOpen(false)}
+            />
+
+            {/* Update Log & Version History Modal */}
+            <UpdateLogModal
+                isOpen={isUpdateLogOpen}
+                onClose={() => setIsUpdateLogOpen(false)}
             />
         </div>
     );

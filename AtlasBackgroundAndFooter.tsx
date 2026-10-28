@@ -9,6 +9,7 @@ export const AtlasBackground: React.FC = () => {
 interface AtlasFooterProps {
   compact?: boolean;
   onOpenErrorLogger?: () => void;
+  onOpenUpdateLogs?: () => void;
   errorCount?: number;
   sidebarWidth?: number;
   currentView?: string;
@@ -16,6 +17,7 @@ interface AtlasFooterProps {
 
 export const AtlasFooter: React.FC<AtlasFooterProps> = ({ 
   onOpenErrorLogger,
+  onOpenUpdateLogs,
   errorCount = 0,
   sidebarWidth = 450,
   currentView = 'studio'
@@ -42,7 +44,7 @@ export const AtlasFooter: React.FC<AtlasFooterProps> = ({
       >
         <button
           onClick={() => setIsMinimized(false)}
-          className="pointer-events-auto bg-[#13060E]/95 hover:bg-[#1B0A16] backdrop-blur-md border border-[#3D1629] hover:border-[#C68B59] text-[#DF9D64] text-[10px] font-mono px-3.5 py-1.5 rounded-full shadow-2xl flex items-center gap-2 transition-all hover:scale-105"
+          className="pointer-events-auto bg-[#13060E]/95 hover:bg-[#1B0A16] backdrop-blur-md border border-[#3D1629] hover:border-[#C68B59] text-[#DF9D64] text-[10px] font-mono px-3.5 py-1.5 rounded-full shadow-2xl flex items-center gap-2 transition-all hover:scale-105 cursor-pointer"
           title="Expand Atlas XXIII Footer Credits"
         >
           <span className="w-1.5 h-1.5 rounded-full bg-[#DF9D64] animate-pulse"></span>
@@ -119,9 +121,14 @@ export const AtlasFooter: React.FC<AtlasFooterProps> = ({
         <div className="flex items-center gap-2">
           <span className="uppercase tracking-widest text-[#8A6D7B] text-[10px] hidden sm:inline">Comic Studio</span>
           <span aria-hidden="true" className="text-[#3D1629] hidden sm:inline">·</span>
-          <span className="text-[10px] font-mono text-[#DF9D64] bg-[#2A0E20] px-2.5 py-0.5 rounded-full border border-[#3D1629] font-semibold">
+          <button
+            type="button"
+            onClick={onOpenUpdateLogs}
+            className="text-[10px] font-mono text-[#DF9D64] bg-[#2A0E20] hover:bg-[#38132B] hover:border-[#C68B59] px-2.5 py-0.5 rounded-full border border-[#3D1629] font-semibold transition-all cursor-pointer hover:scale-105 active:scale-95"
+            title="View Comic Studio Release Ledger & Update Log"
+          >
             {APP_VERSION}
-          </span>
+          </button>
         </div>
       </div>
     </footer>

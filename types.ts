@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
 */
 
-export const APP_VERSION = "v2.0.0";
+export const APP_VERSION = "v2.0.1";
 
 export const MAX_STORY_PAGES = 20; 
 export const INITIAL_TOTAL_PAGES = 2; 

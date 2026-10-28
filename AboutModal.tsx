@@ -4,9 +4,10 @@ import { AtlasLogo } from './AtlasLogo';
 
 interface AboutModalProps {
     onClose: () => void;
+    onOpenUpdateLogs?: () => void;
 }
 
-export const AboutModal: React.FC<AboutModalProps> = ({ onClose }) => {
+export const AboutModal: React.FC<AboutModalProps> = ({ onClose, onOpenUpdateLogs }) => {
     return (
         <div className="fixed inset-0 z-[600] flex items-center justify-center bg-[#0E070C]/90 backdrop-blur-xl p-6 animate-in fade-in duration-300 font-sans">
             <div className="relative max-w-2xl w-full bg-[#150711]/95 text-[#EADDE2] border border-[#3D1629] rounded-[28px] shadow-[0_0_50px_rgba(0,0,0,0.8)] p-8 overflow-hidden">
@@ -19,9 +20,19 @@ export const AboutModal: React.FC<AboutModalProps> = ({ onClose }) => {
                 
                 <div className="flex flex-col items-center text-center mb-6">
                     <AtlasLogo size="md" className="mb-3" />
-                    <div className="bg-[#2A0E20] text-[#DF9E65] border border-[#3D1629] px-3.5 py-1 rounded-full font-mono text-xs tracking-widest uppercase font-bold">
+                    <button
+                        type="button"
+                        onClick={() => {
+                            if (onOpenUpdateLogs) {
+                                onClose();
+                                onOpenUpdateLogs();
+                            }
+                        }}
+                        className="bg-[#2A0E20] hover:bg-[#38132B] hover:border-[#C68B59] text-[#DF9E65] border border-[#3D1629] px-3.5 py-1 rounded-full font-mono text-xs tracking-widest uppercase font-bold transition-all cursor-pointer hover:scale-105"
+                        title="View Comic Studio Release Ledger"
+                    >
                         {APP_VERSION}
-                    </div>
+                    </button>
                 </div>
 
                 <div className="space-y-6 text-sm">
