@@ -28,6 +28,16 @@ const shouldUseDirectClient = (): boolean => {
   return host !== 'localhost' && host !== '127.0.0.1';
 };
 
+const parseJsonResponse = async (res: Response): Promise<any> => {
+  const contentType = res.headers.get('content-type') || '';
+  if (!contentType.includes('application/json')) {
+    throw new Error(
+      `API endpoint unavailable (received ${contentType || 'HTML'} instead of JSON). Please enter your Gemini API key directly in the app.`
+    );
+  }
+  return res.json();
+};
+
 export const generateScriptText = async (
   prompt: string, 
   systemInstruction?: string, 
@@ -35,8 +45,13 @@ export const generateScriptText = async (
 ): Promise<string> => {
   const apiKey = getActiveApiKey();
 
-  // If on web hosting (Firebase) with API key, call directly
-  if (apiKey && shouldUseDirectClient()) {
+  // If on web hosting (Firebase), require direct client API key — never fall through to /api/ (which serves index.html)
+  if (shouldUseDirectClient()) {
+    if (!apiKey) {
+      const msg = "Missing Gemini API Key. Please enter your Gemini API key in the API Key & Guide panel.";
+      logError("API Key Required", msg, "Script Generator");
+      throw new Error(msg);
+    }
     try {
       const ai = new GoogleGenAI({
         apiKey,
@@ -66,10 +81,10 @@ export const generateScriptText = async (
     });
 
     if (res.ok) {
-      const data = await res.json();
+      const data = await parseJsonResponse(res);
       if (data.text) return data.text;
     } else {
-      const errData = await res.json().catch(() => ({}));
+      const errData = await parseJsonResponse(res).catch(() => ({}));
       throw new Error(errData.error || `Server responded with status ${res.status}`);
     }
   } catch (serverErr: any) {
@@ -107,8 +122,13 @@ export const generateComicImage = async (
 ): Promise<{ imageData: string; textData?: string }> => {
   const apiKey = getActiveApiKey();
 
-  // If on web hosting (Firebase) with API key, call directly
-  if (apiKey && shouldUseDirectClient()) {
+  // If on web hosting (Firebase), require direct client API key — never fall through to /api/ (which serves index.html)
+  if (shouldUseDirectClient()) {
+    if (!apiKey) {
+      const msg = "Missing Gemini API Key. Please enter your Gemini API key in the API Key & Guide panel.";
+      logError("API Key Required", msg, `Model: ${model}`);
+      throw new Error(msg);
+    }
     try {
       const ai = new GoogleGenAI({
         apiKey,
@@ -155,7 +175,7 @@ export const generateComicImage = async (
     });
 
     if (res.ok) {
-      const data = await res.json();
+      const data = await parseJsonResponse(res);
       if (data.imageData) {
         return { imageData: data.imageData, textData: data.textData };
       }
@@ -166,7 +186,7 @@ export const generateComicImage = async (
       }
       throw new Error(data.error || "No image data returned from synthesis");
     } else {
-      const errData = await res.json().catch(() => ({}));
+      const errData = await parseJsonResponse(res).catch(() => ({}));
       throw new Error(errData.error || `Server image error (HTTP ${res.status})`);
     }
   } catch (serverErr: any) {

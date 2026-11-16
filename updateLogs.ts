@@ -10,9 +10,21 @@ export interface UpdateLogEntry {
 
 export const UPDATE_LOGS: UpdateLogEntry[] = [
   {
+    version: 'v2.0.2',
+    date: '2026-11-16',
+    isLatest: true,
+    type: 'patch',
+    title: 'API Key Input, Direct SDK Validation & Unified API Info',
+    summary: 'Fixed API key input accessibility, eliminated HTML-as-JSON fallback errors on hosted domains, and unified API quota info directly inside API key dialogs.',
+    changes: [
+      'Fixed hosted direct-client guard in geminiService.ts so missing keys throw a clear prompt instead of hitting /api/ and parsing HTML as JSON.',
+      'Fixed onChangeApiKey wiring in App.tsx and Setup.tsx so Switch API Key opens the key dialog properly.',
+      'Added select-text to all API key inputs and embedded API quota/model info directly inside ApiKeyDialog, QuotaInfo, and the Landing key drawer.'
+    ]
+  },
+  {
     version: 'v2.0.1',
     date: '2026-10-28',
-    isLatest: true,
     type: 'patch',
     title: 'Interactive Version History & Release Ledger',
     summary: 'Direct access to the comprehensive Comic Studio update ledger and version timeline via the version pill in the application footer and About modal.',

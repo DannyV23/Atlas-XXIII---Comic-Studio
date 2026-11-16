@@ -364,7 +364,7 @@ export const Landing: React.FC<LandingProps> = ({
                                                 }
                                             }}
                                             placeholder="Paste Gemini API Key (AIzaSy...)"
-                                            className={`w-full bg-[#12060E] border rounded-xl px-3 py-2 text-xs text-[#FAF5F0] placeholder-[#8A6D7B] font-mono outline-none pr-12 transition-all duration-300 ${
+                                            className={`w-full select-text bg-[#12060E] border rounded-xl px-3 py-2 text-xs text-[#FAF5F0] placeholder-[#8A6D7B] font-mono outline-none pr-12 transition-all duration-300 ${
                                                 pulseKeyInput
                                                     ? 'border-[#DF9D64] ring-2 ring-[#DF9D64]/60 shadow-[0_0_25px_rgba(223,157,100,0.5)]'
                                                     : 'border-[#3D1629] focus:border-[#C68B59]'
@@ -373,27 +373,44 @@ export const Landing: React.FC<LandingProps> = ({
                                         <button
                                             type="button"
                                             onClick={() => setShowKeyText(prev => !prev)}
-                                            className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] text-[#8A6D7B] hover:text-[#FAF5F0] font-mono"
+                                            className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] text-[#8A6D7B] hover:text-[#FAF5F0] font-mono cursor-pointer"
                                         >
                                             {showKeyText ? 'Hide' : 'Show'}
                                         </button>
                                     </div>
                                     <button
+                                        type="button"
                                         onClick={handleSaveSessionKey}
                                         disabled={!sessionKeyInput.trim()}
-                                        className="btn-studio-bronze text-xs px-4 py-2 rounded-xl transition-all disabled:opacity-40 shrink-0 shadow-sm font-mono uppercase"
+                                        className="btn-studio-bronze text-xs px-4 py-2 rounded-xl transition-all disabled:opacity-40 shrink-0 shadow-sm font-mono uppercase cursor-pointer"
                                     >
                                         Activate
                                     </button>
                                     {hasKey && (
                                         <button
+                                            type="button"
                                             onClick={handleClearSessionKey}
-                                            className="px-2.5 py-2 rounded-xl text-xs text-[#8A6D7B] hover:text-rose-400 bg-[#12060E] border border-[#3D1629] transition-colors"
+                                            className="px-2.5 py-2 rounded-xl text-xs text-[#8A6D7B] hover:text-rose-400 bg-[#12060E] border border-[#3D1629] transition-colors cursor-pointer"
                                             title="Clear API Key"
                                         >
                                             Clear
                                         </button>
                                     )}
+                                </div>
+
+                                {/* Concise API Info right where you input your key */}
+                                <div className="pt-2 border-t border-[#3D1629]/70 flex items-center justify-between gap-2 text-[10px] text-[#8A6D7B] font-mono">
+                                    <span>Free Tier: 15 RPM / 1,500 RPD · Stored locally in browser</span>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setMissingKeyPrompt(false);
+                                            setIsGuideOpen(true);
+                                        }}
+                                        className="text-[#DF9E65] hover:underline shrink-0 cursor-pointer"
+                                    >
+                                        API Info &amp; Limits
+                                    </button>
                                 </div>
                             </motion.div>
                         )}

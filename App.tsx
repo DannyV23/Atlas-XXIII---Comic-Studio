@@ -79,7 +79,7 @@ const DownloadModal: React.FC<{
 
 const App: React.FC = () => {
   // --- API Key Hook ---
-  const { validateApiKey, setShowApiKeyDialog, showApiKeyDialog, handleApiKeyDialogContinue } = useApiKey();
+  const { validateApiKey, setShowApiKeyDialog, showApiKeyDialog, openApiKeyDialog, handleApiKeyDialogContinue } = useApiKey();
   const abortControllerRef = useRef<AbortController | null>(null);
 
   // --- View Mode State ---
@@ -1348,7 +1348,7 @@ THANKS FOR READING!`,
         </div>
       )}
       
-      {viewMode === 'landing' && <Landing onNew={() => setViewMode('setup')} onContinue={() => setViewMode('restore')} onChangeApiKey={handleApiKeyDialogContinue} imageModel={imageModel} onImageModelChange={setImageModel} onAppLanguageChange={setAppLanguage} appLanguage={appLanguage} />}
+      {viewMode === 'landing' && <Landing onNew={() => setViewMode('setup')} onContinue={() => setViewMode('restore')} onChangeApiKey={openApiKeyDialog} imageModel={imageModel} onImageModelChange={setImageModel} onAppLanguageChange={setAppLanguage} appLanguage={appLanguage} />}
       {viewMode === 'restore' && <Restore onBack={() => setViewMode('landing')} onRestore={restoreSession} appLanguage={appLanguage} />}
       {viewMode === 'character-gen' && <CharacterGen cast={allCast} onGenerateSheet={handleCharacterSheetGen} onUpdateCast={updateCastMember} onFinish={finalizeCharacterGen} onError={handleAPIError} onCancel={handleCancelGeneration} />}
       
@@ -1406,7 +1406,7 @@ THANKS FOR READING!`,
           onUpdateProp={handleUpdateProp} 
           onDeleteProp={handleDeleteProp} 
           onReset={handleFullReset} 
-          onChangeApiKey={handleApiKeyDialogContinue} 
+          onChangeApiKey={openApiKeyDialog} 
           onOpenCharacterLab={handleOpenCharacterLab} 
           imageModel={imageModel} 
           onImageModelChange={setImageModel} 

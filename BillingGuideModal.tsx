@@ -66,7 +66,7 @@ export const BillingGuideModal: React.FC<Props> = ({
   const isAiStudioEnv = typeof window !== 'undefined' && Boolean((window as any).aistudio?.openSelectKey);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#080206]/85 backdrop-blur-md overflow-y-auto">
+    <div className="fixed inset-0 z-[1200] flex items-center justify-center p-4 bg-[#080206]/85 backdrop-blur-md overflow-y-auto">
       <motion.div 
         initial={{ opacity: 0, scale: 0.95, y: 15 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -164,7 +164,7 @@ export const BillingGuideModal: React.FC<Props> = ({
                   }
                 }}
                 placeholder="Paste Gemini API key (AIzaSy...)"
-                className="w-full bg-[#13070F] border border-[#3D1629] focus:border-[#C68B59] rounded-xl px-3 py-2.5 text-xs text-[#FAF5F0] placeholder-[#8A6D7B] font-mono transition-all pr-14 outline-none"
+                className="w-full select-text bg-[#13070F] border border-[#3D1629] focus:border-[#C68B59] rounded-xl px-3 py-2.5 text-xs text-[#FAF5F0] placeholder-[#8A6D7B] font-mono transition-all pr-14 outline-none"
               />
               <button
                 type="button"
