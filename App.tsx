@@ -628,7 +628,7 @@ const App: React.FC = () => {
     // 2. CHARACTER REFERENCES (Priority: Sheet Only)
     let humanCount = 0;
     for (const p of allProjectCast) {
-        if (pageCastIds.has(p.id) && humanCount < 5) {
+        if (pageCastIds.has(p.id) && humanCount < 8) {
             if (p.characterSheet) {
                 console.log(`Processing sheet for ${p.name}. Size: ${p.characterSheet.length}`);
                 try {
@@ -1717,7 +1717,7 @@ THANKS FOR READING!`,
                                 <div className="space-y-2">
                                     <div className="text-xs font-bold text-[#C68B59] uppercase tracking-widest font-mono border-b border-[#3D1629] pb-1.5 flex justify-between items-center">
                                         <span>{labels.castInScene}</span>
-                                        {selectedCastCount > 5 && <span className="text-[#DF9E65] text-[10px] font-mono">{labels.charLimitWarn}</span>}
+                                        {selectedCastCount > 8 && <span className="text-[#DF9E65] text-[10px] font-mono">{labels.charLimitWarn}</span>}
                                     </div>
                                     <div className="flex flex-col gap-2 overflow-y-auto custom-scrollbar p-1.5 border border-[#3D1629] bg-[#13060E] rounded-xl" style={{ height: castListHeight }}>
                                         {allCast.map(p => { 

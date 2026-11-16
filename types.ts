@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
 */
 
-export const APP_VERSION = "v2.0.2";
+export const APP_VERSION = "v2.0.3";
 
 export const MAX_STORY_PAGES = 20; 
 export const INITIAL_TOTAL_PAGES = 2; 
@@ -327,7 +327,7 @@ export const UI_LABELS = {
         downloadZip: "DOWNLOAD .ZIP",
         downloadPdf: "DOWNLOAD .PDF",
         // Warnings
-        charLimitWarn: "⚠️ >5 Characters selected. AI may struggle with likeness.",
+        charLimitWarn: "⚠️ >8 Characters selected. AI may struggle with likeness.",
         // Prompt Lab
         executePrompt: "EXECUTE PROMPT",
         payloadViewer: "Payload Viewer",
@@ -430,7 +430,7 @@ export const UI_LABELS = {
         burnOverlaysDesc: "Si se marca, intenta incluir logos/texto en la salida (solo PDF).",
         downloadZip: "DESCARGAR .ZIP",
         downloadPdf: "DESCARGAR .PDF",
-        charLimitWarn: "⚠️ >5 Personajes. La IA podría sufrir con el parecido.",
+        charLimitWarn: "⚠️ >8 Personajes. La IA podría sufrir con el parecido.",
         executePrompt: "EJECUTAR PROMPT",
         payloadViewer: "Visor de Carga",
         textPrompt: "Prompt de Texto",

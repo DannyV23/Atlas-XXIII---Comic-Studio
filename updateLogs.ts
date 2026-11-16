@@ -10,9 +10,20 @@ export interface UpdateLogEntry {
 
 export const UPDATE_LOGS: UpdateLogEntry[] = [
   {
-    version: 'v2.0.2',
+    version: 'v2.0.3',
     date: '2026-11-16',
     isLatest: true,
+    type: 'patch',
+    title: 'Expanded 8-Character Reference Limit',
+    summary: 'Increased the per-page character reference upload & injection limit from 5 to 8 characters to leverage newer Nano Banana / Gemini models.',
+    changes: [
+      'Raised character reference injection cap from 5 to 8 characters per page in the synthesis pipeline.',
+      'Updated scene cast selection warnings (EN & ES) from >5 to >8 characters.'
+    ]
+  },
+  {
+    version: 'v2.0.2',
+    date: '2026-11-16',
     type: 'patch',
     title: 'API Key Input, Direct SDK Validation & Unified API Info',
     summary: 'Fixed API key input accessibility, eliminated HTML-as-JSON fallback errors on hosted domains, and unified API quota info directly inside API key dialogs.',
