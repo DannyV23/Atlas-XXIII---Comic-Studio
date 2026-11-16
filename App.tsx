@@ -18,7 +18,7 @@ import { CharacterGen } from './CharacterGen';
 import { AtlasBackground, AtlasFooter } from './AtlasBackgroundAndFooter';
 import { logError, logWarning, logInfo, studioLogger, StudioLogEntry } from './ErrorLogger';
 import { ErrorLoggerModal } from './ErrorLoggerModal';
-import { getActiveApiKey, hasValidApiKey } from './geminiService';
+import { getActiveApiKey, hasValidApiKey, generateScriptText, generateComicImage } from './geminiService';
 
 // --- Constants ---
 const MODEL_TEXT_NAME = "gemini-3.8-flash"; 
@@ -536,18 +536,8 @@ const App: React.FC = () => {
       if (!input.trim()) return "";
       try {
           const prompt = `You are a professional comic book editor. TASK: Rewrite input to be more vivid. CONTEXT: ${context}. INPUT: "${input}". INSTRUCTIONS: Concise. Visuals only. No markdown.`;
-          const apiKey = getActiveApiKey();
-          const res = await fetch("/api/gemini/generate-text", {
-              method: "POST",
-              headers: { 
-                  "Content-Type": "application/json",
-                  ...(apiKey ? { "x-gemini-api-key": apiKey } : {})
-              },
-              body: JSON.stringify({ prompt, model: MODEL_TEXT_NAME, apiKey })
-          });
-          const data = await res.json();
-          if (data.error) throw new Error(data.error);
-          return data.text?.trim() || input;
+          const enhanced = await generateScriptText(prompt, undefined, MODEL_TEXT_NAME);
+          return enhanced?.trim() || input;
       } catch (e) {
           handleAPIError(e, "Text Script Enhancement");
           return input;
@@ -578,18 +568,8 @@ const App: React.FC = () => {
               imageConfig: { aspectRatio: '4:3', imageSize: '2K' }
           };
 
-          const apiKey = getActiveApiKey();
-          const res = await fetch("/api/gemini/generate-image", {
-              method: "POST",
-              headers: { 
-                  "Content-Type": "application/json",
-                  ...(apiKey ? { "x-gemini-api-key": apiKey } : {})
-              },
-              body: JSON.stringify({ model: imageModel, parts, config, apiKey })
-          });
-          const data = await res.json();
-          if (data.error) throw new Error(data.error);
-          return data.imageData || '';
+          const result = await generateComicImage(parts, config, imageModel);
+          return result.imageData || '';
       } catch (e: any) { 
           logError("Character Sheet Generation Error", e?.message || "Failed to generate character sheet", `Model: ${imageModel}`);
           throw e; 
@@ -857,25 +837,7 @@ const App: React.FC = () => {
             }
           };
 
-          const apiKey = getActiveApiKey();
-          const res = await fetch("/api/gemini/generate-image", {
-              method: "POST",
-              headers: { 
-                  "Content-Type": "application/json",
-                  ...(apiKey ? { "x-gemini-api-key": apiKey } : {})
-              },
-              body: JSON.stringify({ model: imageModel, parts, config, apiKey })
-          });
-
-          const data = await res.json();
-          if (data.error) throw new Error(data.error);
-
-          if (data.finishReason === 'OTHER' || data.finishReason === 'SAFETY' || data.blockReason) {
-               throw new Error("Content Policy Violation (Safety Block). The AI refused your prompt. Try enabling Mature Mode or removing trigger words/sheets.");
-          }
-          
-          let imageData = data.imageData || '';
-          let textData = data.textData || '';
+          const { imageData, textData } = await generateComicImage(parts, config, imageModel);
 
           if (!imageData && textData) {
                throw new Error(`Model Response (No Image): ${textData}`);

@@ -4,7 +4,7 @@
   <img src="public/assets/logos_v3/AtlasXXIII_comicstudio_prevector_lightversion_v3.png" alt="Atlas XXIII Comic Studio" width="480" />
   <br /><br />
   <a href="https://comic.atlasxxiii.app"><img src="https://img.shields.io/badge/Live_App-comic.atlasxxiii.app-C68B59?style=for-the-badge&logo=firebase&logoColor=white" alt="Live App" /></a>
-  <img src="https://img.shields.io/badge/Version-v2.0.3-3D1629?style=for-the-badge&labelColor=150711&color=DF9E65" alt="Version" />
+  <img src="https://img.shields.io/badge/Version-v2.0.4-3D1629?style=for-the-badge&labelColor=150711&color=DF9E65" alt="Version" />
   <img src="https://img.shields.io/badge/Architecture-React_19_•_Gemini_3.8_Flash_•_Firebase-180813?style=for-the-badge&labelColor=0D0509&color=C68B59" alt="Tech Stack" />
 </div>
 
@@ -46,7 +46,7 @@
 
 #### 7. Studio Diagnostics, Release Ledger & Localization
 - **Error Logger & Diagnostics**: Built-in diagnostic modal capturing API errors, safety blocks, and stack traces with one-click copy.
-- **Interactive Release Ledger (`v2.0.3`)**: Viewable version history and release notes directly from the app.
+- **Interactive Release Ledger (`v2.0.4`)**: Viewable version history and release notes directly from the app.
 - **Bilingual UI (`EN` / `ES`) & API Guide**: Instant English/Spanish switching alongside an interactive Gemini API key setup and free-tier billing guide.
 
 ---
@@ -112,5 +112,5 @@ Built in accordance with the official **Atlas XXIII Studio Plum & Deep Burgundy*
 <div align="center">
   <p><b>Atlas XXIII Suite • <a href="https://atlasxxiii.app">atlasxxiii.app</a></b></p>
   <p>Created by Danny Vain · <a href="https://www.instagram.com/dannyvain/">instagram.com/dannyvain</a></p>
-  <p><code>v2.0.3</code></p>
+  <p><code>v2.0.4</code></p>
 </div>

@@ -10,9 +10,21 @@ export interface UpdateLogEntry {
 
 export const UPDATE_LOGS: UpdateLogEntry[] = [
   {
-    version: 'v2.0.3',
+    version: 'v2.0.4',
     date: '2026-11-16',
     isLatest: true,
+    type: 'patch',
+    title: 'Direct Gemini Client Routing Across All Studio Actions',
+    summary: 'Migrated text enhancement, character sheet generation, and Prompt Lab execution from legacy /api/ endpoints to the direct Gemini SDK service.',
+    changes: [
+      'Replaced legacy fetch("/api/gemini/...") calls in App.tsx with generateScriptText and generateComicImage from geminiService.ts.',
+      'Fixed SyntaxError: Unexpected token "<" ("<!DOCTYPE...") when generating comics or character sheets on Firebase Hosting with an active API key.',
+      'Added direct safety/finishReason and text-only fallback error reporting in generateComicImage.'
+    ]
+  },
+  {
+    version: 'v2.0.3',
+    date: '2026-11-16',
     type: 'patch',
     title: 'Expanded 8-Character Reference Limit',
     summary: 'Increased the per-page character reference upload & injection limit from 5 to 8 characters to leverage newer Nano Banana / Gemini models.',

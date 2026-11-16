@@ -154,8 +154,16 @@ export const generateComicImage = async (
         }
       }
 
+      if (response.promptFeedback?.blockReason || candidate?.finishReason === 'SAFETY' || candidate?.finishReason === 'OTHER') {
+        const reason = response.promptFeedback?.blockReason || candidate?.finishReason;
+        throw new Error(`Content Policy Violation (Safety Block: ${reason}). Try adjusting your prompt or enabling Mature Mode.`);
+      }
+
       if (imageData) {
         return { imageData, textData };
+      }
+      if (textData) {
+        throw new Error(`Model Response (No Image): ${textData}`);
       }
       throw new Error("No image data received in direct response");
     } catch (clientErr: any) {
